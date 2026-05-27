@@ -20,12 +20,12 @@
   // colorA y colorB son colores hex para el SVG placeholder cuando no hay foto.
   // Cuando tengás fotos reales: pone "photo: 'assets/img/nombre.jpg'" en cada artista.
   window.__ARTISTS__ = [
-    { id: "karkis",   name: "Los Karkis",       genre: "Chichamera",  colorA: "#ff5a1f", colorB: "#d63384" },
+    { id: "Norteña",   name: "Jaxdane Flores",       genre: "Norteña",  colorA: "#ff5a1f", colorB: "#d63384" },
     { id: "tropical", name: "Tropikana Sound",  genre: "Cumbia",      colorA: "#ffb454", colorB: "#ff5a1f" },
     { id: "fiesta",   name: "DJ Fiesta",        genre: "Sonidero",    colorA: "#b8d63a", colorB: "#ffb454" },
-    { id: "sabrosa",  name: "La Sabrosa",       genre: "Cumbia Pop",  colorA: "#d63384", colorB: "#ff5a1f" },
-    { id: "manuel",   name: "Manuel del Mar",   genre: "Tropical",    colorA: "#ffb454", colorB: "#b8d63a" },
-    { id: "kombo",    name: "Kombo Caliente",   genre: "Chichamera",  colorA: "#ff5a1f", colorB: "#ffb454" }
+    { id: "Cumbia",  name: "Deylis E.C",       genre: "Cumbia",  colorA: "#d63384", colorB: "#ff5a1f" },
+    { id: "Estrenos",   name: "Manuel del Mar",   genre: "Tropical",    colorA: "#ffb454", colorB: "#b8d63a" },
+    { id: "Electro",    name: "Kombo Caliente",   genre: "Chichamera",  colorA: "#ff5a1f", colorB: "#ffb454" }
   ];
 
   // ============ ÁLBUMES / RELEASES ============
