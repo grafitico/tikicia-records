@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0e0a08" />
+<title>TIKICIA RECORDS · Disquera Independiente</title>
+<meta name="description" content="Disquera independiente de cumbia, chichamera y música fiestera. Catálogo, artistas y lanzamientos.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css?v=20260527">
+</head>
+<body>
+
+<!-- ============ SPLASH LOADER ============ -->
+<div class="splash" id="splash">
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <span class="splash-mark">◉</span>
+      <span class="splash-text">TIKICIA</span>
+    </div>
+    <div class="splash-bar"><span></span></div>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a href="#" class="nav-brand">
+    <span class="nav-mark">◉</span>
+    <span class="nav-name">TIKICIA <em>Records</em></span>
+  </a>
+  <nav class="nav-links">
+    <a href="#catalogo">Catálogo</a>
+    <a href="#artistas">Artistas</a>
+    <a href="#releases">Lanzamientos</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+  <a href="#contacto" class="nav-cta">Demo →</a>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-mesh"></div>
+    <div class="hero-grain"></div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-meta">
+      <span class="dot"></span>
+      <span>Costa Rica · Disquera independiente · Est. 2024</span>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="reveal-line">Cumbia, chichamera</span>
+      <span class="reveal-line">y <em>fiesta</em> en alta</span>
+      <span class="reveal-line">fidelidad.</span>
+    </h1>
+
+    <p class="hero-sub reveal-line">
+      Producimos y publicamos a la nueva generación de artistas tropicales.
+      Escucha el catálogo completo abajo.
+    </p>
+
+    <div class="hero-actions reveal-line">
+      <a href="#catalogo" class="btn btn-primary">
+        <span class="btn-icon">▶</span>
+        Reproducir catálogo
+      </a>
+      <a href="#artistas" class="btn btn-ghost">Ver artistas</a>
+    </div>
+
+    <div class="hero-stats reveal-line">
+      <div><span class="stat-num" data-count-to="12">0</span><span class="stat-label">Artistas</span></div>
+      <div><span class="stat-num" data-count-to="48">0</span><span class="stat-label">Lanzamientos</span></div>
+      <div><span class="stat-num" data-count-to="2.4">0</span><span class="stat-label">M de streams</span></div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <span>Desliza</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>◉ CUMBIA</span><span>◉ CHICHAMERA</span><span>◉ TROPICAL</span><span>◉ FIESTERA</span><span>◉ SONIDERO</span><span>◉ KARKIS</span><span>◉ TIKICIA RECORDS</span>
+    <span>◉ CUMBIA</span><span>◉ CHICHAMERA</span><span>◉ TROPICAL</span><span>◉ FIESTERA</span><span>◉ SONIDERO</span><span>◉ KARKIS</span><span>◉ TIKICIA RECORDS</span>
+  </div>
+</div>
+
+<!-- ============ CATÁLOGO (TRACKS) ============ -->
+<section class="section catalog" id="catalogo">
+  <div class="section-head">
+    <p class="kicker">01 · Catálogo</p>
+    <h2 class="section-title">Lo que <em>está sonando</em></h2>
+    <p class="section-sub">Toca cualquier canción. El reproductor de abajo te sigue mientras navegas.</p>
+  </div>
+
+  <div class="track-list" id="trackList">
+    <!-- Tracks se montan desde JS -->
+  </div>
+</section>
+
+<!-- ============ ARTISTAS ============ -->
+<section class="section artists" id="artistas">
+  <div class="section-head">
+    <p class="kicker">02 · Roster</p>
+    <h2 class="section-title">Nuestros <em>artistas</em></h2>
+    <p class="section-sub">La gente que está construyendo el sonido de la disquera.</p>
+  </div>
+
+  <div class="artist-grid" id="artistGrid">
+    <!-- Artistas se montan desde JS -->
+  </div>
+</section>
+
+<!-- ============ RELEASES (ÁLBUMES BENTO) ============ -->
+<section class="section releases" id="releases">
+  <div class="section-head">
+    <p class="kicker">03 · Lanzamientos</p>
+    <h2 class="section-title">Álbumes y <em>EPs</em></h2>
+    <p class="section-sub">Catálogo completo. Toca una carátula para escuchar.</p>
+  </div>
+
+  <div class="release-bento" id="releaseBento">
+    <!-- Releases se montan desde JS -->
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="section manifesto">
+  <div class="manifesto-inner">
+    <p class="kicker">Quiénes somos</p>
+    <h2 class="manifesto-text">
+      Somos una disquera independiente <em>de Costa Rica</em>.
+      Producimos cumbia, chichamera y música fiestera con la idea simple
+      de que <em>una buena canción</em> dura más que cualquier algoritmo.
+    </h2>
+    <div class="manifesto-grid">
+      <div>
+        <h4>Producción</h4>
+        <p>Estudio propio, mezcla y masterización. Cada track sale listo para sonar en bocina grande.</p>
+      </div>
+      <div>
+        <h4>Distribución</h4>
+        <p>Subimos tu música a Spotify, Apple Music, YouTube y todas las plataformas. Tú te quedas con tu obra.</p>
+      </div>
+      <div>
+        <h4>Booking</h4>
+        <p>Conectamos a nuestros artistas con fiestas, festivales y giras nacionales e internacionales.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="section contact" id="contacto">
+  <div class="contact-inner">
+    <p class="kicker">04 · Trabajemos</p>
+    <h2 class="section-title">Mandanos tu <em>demo</em></h2>
+    <p class="section-sub">¿Tenés una canción que necesita salir al mundo? Escribinos.</p>
+
+    <form class="contact-form" id="contactForm" onsubmit="return false;">
+      <div class="form-row">
+        <label>
+          <span>Nombre artístico</span>
+          <input type="text" name="name" required placeholder="Ej. Los Karkis" />
+        </label>
+        <label>
+          <span>Email o WhatsApp</span>
+          <input type="text" name="contact" required placeholder="vos@email.com" />
+        </label>
+      </div>
+      <label>
+        <span>Link a tu demo (SoundCloud, Drive, WeTransfer...)</span>
+        <input type="url" name="demo" placeholder="https://..." />
+      </label>
+      <label>
+        <span>Contanos de vos</span>
+        <textarea name="message" rows="4" placeholder="Género, de dónde sos, qué buscás..."></textarea>
+      </label>
+      <button type="submit" class="btn btn-primary form-submit">Enviar demo →</button>
+      <p class="form-note" id="formNote"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="footer-mark">◉</span>
+      <span class="footer-name">TIKICIA RECORDS</span>
+      <p>Disquera independiente · San José, Costa Rica</p>
+    </div>
+    <div class="footer-links">
+      <h5>Catálogo</h5>
+      <a href="#catalogo">Canciones</a>
+      <a href="#artistas">Artistas</a>
+      <a href="#releases">Lanzamientos</a>
+    </div>
+    <div class="footer-links">
+      <h5>Plataformas</h5>
+      <a href="#">Spotify</a>
+      <a href="#">Apple Music</a>
+      <a href="#">YouTube Music</a>
+      <a href="#">Instagram</a>
+    </div>
+    <div class="footer-links">
+      <h5>Contacto</h5>
+      <a href="mailto:hola@tikiciarecords.com">hola@tikiciarecords.com</a>
+      <a href="#contacto">Mandar demo</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 TIKICIA RECORDS · Todos los derechos reservados</span>
+    <span>Hecho con cariño en CR</span>
+  </div>
+</footer>
+
+<!-- ============ MUSIC PLAYER (STICKY BOTTOM, ESTILO SPOTIFY) ============ -->
+<div class="player" id="player" aria-label="Reproductor de música">
+  <div class="player-inner">
+
+    <!-- Now playing info -->
+    <div class="player-info">
+      <div class="player-cover" id="playerCover">
+        <svg viewBox="0 0 100 100" class="player-cover-default"><rect width="100" height="100" fill="#1a1310"/><text x="50" y="58" text-anchor="middle" fill="#c5301e" font-size="40" font-family="serif">◉</text></svg>
+      </div>
+      <div class="player-text">
+        <div class="player-title" id="playerTitle">Selecciona una canción</div>
+        <div class="player-artist" id="playerArtist">— —</div>
+      </div>
+      <button class="player-like" id="playerLike" aria-label="Me gusta">♡</button>
+    </div>
+
+    <!-- Controls -->
+    <div class="player-controls">
+      <div class="player-buttons">
+        <button class="ctrl-btn" id="ctrlShuffle" aria-label="Aleatorio">⇄</button>
+        <button class="ctrl-btn" id="ctrlPrev" aria-label="Anterior">⏮</button>
+        <button class="ctrl-btn ctrl-play" id="ctrlPlay" aria-label="Reproducir">
+          <span class="play-icon">▶</span>
+          <span class="pause-icon">❚❚</span>
+        </button>
+        <button class="ctrl-btn" id="ctrlNext" aria-label="Siguiente">⏭</button>
+        <button class="ctrl-btn" id="ctrlRepeat" aria-label="Repetir">↻</button>
+      </div>
+      <div class="player-progress">
+        <span class="time-current" id="timeCurrent">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-bg"></div>
+          <div class="progress-fill" id="progressFill"></div>
+          <div class="progress-thumb" id="progressThumb"></div>
+        </div>
+        <span class="time-total" id="timeTotal">0:00</span>
+      </div>
+    </div>
+
+    <!-- Volume -->
+    <div class="player-extra">
+      <button class="ctrl-btn" id="ctrlMute" aria-label="Silenciar">
+        <span class="vol-icon-on">♪</span>
+        <span class="vol-icon-off">⨯</span>
+      </button>
+      <div class="volume-bar" id="volumeBar">
+        <div class="volume-bg"></div>
+        <div class="volume-fill" id="volumeFill"></div>
+      </div>
+    </div>
+
+  </div>
+  <audio id="audioElement" preload="metadata"></audio>
+</div>
+
+<!-- ============ SCRIPTS ============ -->
+<script defer src="data.js?v=20260527"></script>
+<script defer src="main.js?v=20260527"></script>
+
+</body>
+</html>
