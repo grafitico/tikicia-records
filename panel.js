@@ -8,6 +8,7 @@
 
   const PASS    = 'tikicia2024';
   const LS_KEY  = 'tikicia_v2';
+  const GH_KEY  = 'tikicia_gh';
   const DB_NAME = 'tikicia_media';
 
   /* ──────────────────────────────────────────────────────────────
@@ -65,7 +66,7 @@
     }
     applyToGlobal();
   }
-  function saveCat()       { localStorage.setItem(LS_KEY, JSON.stringify(cat)); applyToGlobal(); }
+  function saveCat()       { localStorage.setItem(LS_KEY, JSON.stringify(cat)); applyToGlobal(); pushToGitHub(); }
   function applyToGlobal() { window.__TRACKS__=cat.tracks; window.__ARTISTS__=cat.artists; window.__RELEASES__=cat.releases; }
 
   /* ──────────────────────────────────────────────────────────────
@@ -238,6 +239,7 @@
     <button class="adm-tab active" data-tab="tracks">🎵 Canciones</button>
     <button class="adm-tab" data-tab="artists">👤 Artistas</button>
     <button class="adm-tab" data-tab="releases">💿 Lanzamientos</button>
+    <button class="adm-tab" data-tab="github">⚙ GitHub</button>
   </div>
   <div class="adm-scroll">
     <div class="adm-pane active" id="adm-pane-tracks">
@@ -260,6 +262,32 @@
         <button class="ab ab-primary" id="adm-add-release">+ Nuevo lanzamiento</button>
       </div>
       <div id="adm-list-releases"></div>
+    </div>
+    <div class="adm-pane" id="adm-pane-github">
+      <div class="adm-sec"><h2>Sync automático con <em>GitHub</em></h2></div>
+      <div style="display:flex;flex-direction:column;gap:1rem;max-width:500px">
+        <p style="font-size:.82rem;color:#8a7660;line-height:1.6">Con esto, cada vez que guardes una canción, artista o lanzamiento, <strong style="color:#c8b896">se actualiza data.js en GitHub automáticamente</strong> y el sitio se ve igual en todos los dispositivos.</p>
+        <div class="af">
+          <label>Token de GitHub (Personal Access Token)</label>
+          <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          <span class="af-hint">Necesita permiso <strong>Contents (write)</strong> &nbsp;·&nbsp; <a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Tikicia+Records+Admin" target="_blank" rel="noopener" style="color:#d08e30">Crear token →</a></span>
+        </div>
+        <div class="af-row">
+          <div class="af"><label>Usuario / Organización</label><input id="gh-owner" value="grafitico" placeholder="grafitico"></div>
+          <div class="af"><label>Repositorio</label><input id="gh-repo" value="tikicia-records" placeholder="tikicia-records"></div>
+        </div>
+        <div class="af">
+          <label>Rama (branch)</label>
+          <input id="gh-branch" value="main" placeholder="main">
+          <span class="af-hint">La rama donde está publicado el sitio (generalmente "main")</span>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="ab ab-primary" id="gh-save-btn">Guardar config ◆</button>
+          <button class="ab ab-outline" id="gh-test-btn">Probar conexión</button>
+        </div>
+        <div id="gh-status" style="font-size:.78rem;line-height:1.6"></div>
+        <p style="font-size:.72rem;color:#4a3c2a;line-height:1.5;border-top:1px solid rgba(240,232,210,.06);padding-top:.8rem">⚠ El token se guarda solo en este navegador. No lo compartás.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -293,6 +321,21 @@
     $('adm-fi-audio').addEventListener('change', e => handleAudioFile(e.target.files[0]));
     $('adm-fi-cover').addEventListener('change', e => handleCoverFile(e.target.files[0]));
     document.querySelectorAll('.adm-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+    $('gh-save-btn').addEventListener('click', () => {
+      saveGhCfg({ token: $('gh-token').value.trim(), owner: $('gh-owner').value.trim(), repo: $('gh-repo').value.trim(), branch: $('gh-branch').value.trim() || 'main' });
+      toast('ok', 'Configuración de GitHub guardada ✓');
+    });
+    $('gh-test-btn').addEventListener('click', async () => {
+      const c = ghCfg();
+      if (!c.token) { toast('err', 'Primero ingresá el token'); return; }
+      const st = $('gh-status'); st.style.color = '#8a7660'; st.textContent = 'Probando conexión…';
+      try {
+        const r = await fetch(`https://api.github.com/repos/${c.owner}/${c.repo}/contents/data.js`, { headers: { 'Authorization': 'token ' + c.token, 'Accept': 'application/vnd.github.v3+json' } });
+        if (r.ok) { st.style.color = '#25d366'; st.textContent = '✓ Conexión exitosa · Token válido y repositorio accesible'; }
+        else { st.style.color = '#c0392b'; st.textContent = '✕ Error ' + r.status + ' · Verificá el token y el nombre del repositorio'; }
+      } catch (e) { st.style.color = '#c0392b'; st.textContent = '✕ Sin conexión a internet'; }
+    });
   }
 
   function ins(h) { document.body.insertAdjacentHTML('beforeend', h); }
@@ -308,6 +351,7 @@
     if (tab === 'tracks')   renderTracks();
     if (tab === 'artists')  renderArtists();
     if (tab === 'releases') renderReleases();
+    if (tab === 'github')   renderGhSettings();
   }
 
   /* ──────────────────────────────────────────────────────────────
@@ -845,6 +889,53 @@ window.__RELEASES__ = ${JSON.stringify(cat.releases,null,2)};
   }
   let _t; function toast(type,msg){ const el=$('adm-toast'); if(!el)return; el.textContent=msg; el.className=`show ${type}`; clearTimeout(_t); _t=setTimeout(()=>el.classList.remove('show'),3200); }
   function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ──────────────────────────────────────────────────────────────
+     GITHUB SYNC
+  ────────────────────────────────────────────────────────────── */
+  function ghCfg()      { try { return JSON.parse(localStorage.getItem(GH_KEY)||'{}'); } catch(e) { return {}; } }
+  function saveGhCfg(c) { localStorage.setItem(GH_KEY, JSON.stringify(c)); }
+
+  function renderGhSettings() {
+    const c = ghCfg();
+    const set = (id, v) => { const el = $(id); if (el) el.value = v || ''; };
+    set('gh-token',  c.token  || '');
+    set('gh-owner',  c.owner  || 'grafitico');
+    set('gh-repo',   c.repo   || 'tikicia-records');
+    set('gh-branch', c.branch || 'main');
+    const st = $('gh-status');
+    if (st && c.token) { st.style.color = '#8a7660'; st.textContent = '✓ Token configurado · probá la conexión para verificar'; }
+  }
+
+  function genDataJs() {
+    const d = new Date().toLocaleDateString('es-CR');
+    return `// TIKICIA RECORDS — Catálogo\n// Auto-generado: ${d} · Panel admin ⚙\n// Para editar: abrí el panel admin en el sitio\n\n(function () { "use strict";\n\nwindow.__TRACKS__   = ${JSON.stringify(cat.tracks,   null, 2)};\n\nwindow.__ARTISTS__  = ${JSON.stringify(cat.artists,  null, 2)};\n\nwindow.__RELEASES__ = ${JSON.stringify(cat.releases, null, 2)};\n\n})();\n`;
+  }
+
+  async function pushToGitHub() {
+    const c = ghCfg();
+    if (!c.token || !c.owner || !c.repo) return;
+    toast('inf', 'Publicando en GitHub…');
+    try {
+      const api  = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/data.js`;
+      const hdrs = { 'Authorization': 'token ' + c.token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+      const getRes = await fetch(api, { headers: hdrs });
+      const sha    = getRes.ok ? (await getRes.json()).sha : null;
+      const encoded = btoa(unescape(encodeURIComponent(genDataJs())));
+      const body   = { message: 'Actualizar catálogo desde panel admin', content: encoded, branch: c.branch || 'main' };
+      if (sha) body.sha = sha;
+      const putRes = await fetch(api, { method: 'PUT', headers: hdrs, body: JSON.stringify(body) });
+      if (putRes.ok) {
+        toast('ok', 'data.js actualizado en GitHub ✓ · Todos los dispositivos verán los cambios en ~1 min');
+      } else {
+        const err = await putRes.json().catch(() => ({}));
+        toast('err', 'GitHub: ' + (err.message || 'Error al guardar — revisá la config'));
+      }
+    } catch (e) {
+      toast('err', 'Sin conexión a GitHub');
+      console.warn('[TIKICIA] GH push:', e);
+    }
+  }
 
   /* ──────────────────────────────────────────────────────────────
      INIT

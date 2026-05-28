@@ -282,6 +282,7 @@
       player.el.classList.add('active');
 
       if (t.audio) {
+        player.audio.preload = 'auto';
         player.audio.src = t.audio;
         player.audio.play().catch(() => {
           title.textContent = t.title + ' (Demo)';
@@ -451,6 +452,18 @@
 
   // Re-init after data.js loads (defer order)
   window.addEventListener('load', function () {
+    // Preload first track MP3 so está listo cuando el usuario le da play
+    safe('audio-preload', function () {
+      const first = (window.__TRACKS__ || [])[0];
+      if (!first?.audio) return;
+      const link = document.createElement('link');
+      link.rel  = 'preload';
+      link.as   = 'audio';
+      link.type = 'audio/mpeg';
+      link.href = first.audio;
+      document.head.appendChild(link);
+    });
+
     safe('tracks-init',   () => { if (!$('#trackList')?.children.length)  { const e = document.createEvent('Event'); e.initEvent('DOMContentLoaded', true, true); document.dispatchEvent(e); } });
     safe('artists-init',  () => { $('#artistGrid') && !$('#artistGrid').children.length  && safe('artists',  () => {}) });
     safe('releases-init', () => { $('#releaseBento') && !$('#releaseBento').children.length && safe('releases', () => {}) });
