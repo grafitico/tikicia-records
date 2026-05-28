@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TIKICIA RECORDS · Panel de Canciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:    #080604;
+  --bg-2:  #0f0b08;
+  --bg-3:  #17110a;
+  --bg-4:  #1e1510;
+  --ink:   #f0e8d2;
+  --ink-2: #c8b896;
+  --ink-3: #8a7660;
+  --ink-4: #4a3c2a;
+  --rule:  rgba(240,232,210,0.09);
+  --rule-2:rgba(240,232,210,0.15);
+  --accent:     #e8520f;
+  --accent-warm:#d08e30;
+  --green:  #25d366;
+  --red:    #c0392b;
+  --blue:   #2c56c0;
+  --brand-gradient: linear-gradient(135deg, #c8341a 0%, #e8520f 25%, #d08e30 50%, #8e2d9a 75%, #2c56c0 100%);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select {
+  font: inherit;
+  background: var(--bg-3);
+  border: 1px solid var(--rule-2);
+  color: var(--ink);
+  border-radius: 3px;
+  padding: 0.6rem 0.8rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,82,15,0.12);
+}
+select option { background: var(--bg-3); }
+h1,h2,h3,h4,h5 { font-family: 'Fraunces', serif; font-weight: 400; }
+
+/* ── LOGIN ── */
+#loginScreen {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.login-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.login-logo span:first-child {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.15em;
+}
+.login-logo span:last-child {
+  font-size: 0.72rem;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+.login-box {
+  background: var(--bg-2);
+  border: 1px solid var(--rule-2);
+  padding: 2.5rem;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.login-box h3 { font-size: 1.1rem; font-weight: 400; color: var(--ink-2); }
+.login-box label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-3); display: flex; flex-direction: column; gap: 0.4rem; }
+.btn-login {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: background 0.2s;
+  border-radius: 2px;
+}
+.btn-login:hover { background: #c8341a; }
+.login-error { font-size: 0.8rem; color: var(--red); display: none; }
+
+/* ── LAYOUT ── */
+#app { display: none; flex-direction: column; min-height: 100vh; }
+#app.visible { display: flex; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 2rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-2);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.topbar-brand span:first-child {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.topbar-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+}
+.topbar-actions { display: flex; gap: 0.7rem; align-items: center; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-2);
+  padding: 0 2rem;
+  gap: 0;
+}
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  background: none;
+  border-radius: 0;
+  cursor: pointer;
+  position: relative;
+}
+.tab-btn:hover { color: var(--ink-2); }
+.tab-btn.active {
+  color: var(--accent-warm);
+  border-bottom-color: var(--accent-warm);
+}
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-4);
+  border: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  color: var(--ink-3);
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.section-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.section-toolbar h2 {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--ink);
+}
+.section-toolbar h2 em { font-style: italic; color: var(--accent-warm); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+.btn-primary:hover { background: #c8341a; border-color: #c8341a; }
+.btn-outline { background: transparent; color: var(--ink-2); border-color: var(--rule-2); }
+.btn-outline:hover { border-color: var(--accent-warm); color: var(--ink); }
+.btn-danger  { background: transparent; color: var(--red); border-color: rgba(192,57,43,0.3); }
+.btn-danger:hover  { background: rgba(192,57,43,0.1); }
+.btn-success { background: transparent; color: var(--green); border-color: rgba(37,211,102,0.3); }
+.btn-success:hover { background: rgba(37,211,102,0.08); }
+.btn-sm { padding: 0.3rem 0.7rem; font-size: 0.7rem; }
+.btn-icon-only { width: 30px; height: 30px; padding: 0; justify-content: center; }
+
+/* ── TRACK TABLE ── */
+.track-table {
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-collapse: collapse;
+}
+.track-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink-3);
+  font-weight: 400;
+  padding: 0.7rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-2);
+}
+.track-table td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+  font-size: 0.88rem;
+}
+.track-table tbody tr { transition: background 0.15s; }
+.track-table tbody tr:hover { background: var(--bg-2); }
+.track-table tbody tr:last-child td { border-bottom: none; }
+
+.td-cover {
+  width: 40px;
+}
+.mini-cover {
+  width: 36px; height: 36px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--bg-3);
+  flex-shrink: 0;
+}
+.mini-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mini-cover-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.td-title strong { font-weight: 500; display: block; margin-bottom: 0.1rem; }
+.td-title span { font-size: 0.78rem; color: var(--ink-3); }
+
+.td-audio { text-align: center; }
+.audio-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.audio-dot.has-audio { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.audio-dot.no-audio  { background: var(--ink-4); }
+
+.td-actions { width: 120px; white-space: nowrap; }
+.td-actions .btn { margin-right: 0.3rem; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--ink-3);
+}
+.empty-state .big-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+.empty-state p { font-size: 0.9rem; max-width: 320px; margin: 0 auto; }
+
+/* ── ADD / EDIT FORM DRAWER ── */
+.drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: none;
+}
+.drawer-overlay.open { display: block; }
+
+.drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(540px, 100vw);
+  background: var(--bg-2);
+  border-left: 1px solid var(--rule-2);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.35s var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.drawer-header h3 { font-size: 1.1rem; font-weight: 400; }
+.drawer-close {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3);
+  font-size: 1.2rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.drawer-close:hover { color: var(--ink); background: var(--rule); }
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.drawer-body::-webkit-scrollbar { width: 4px; }
+.drawer-body::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 2px; }
+
+.drawer-footer {
+  padding: 1.2rem 1.5rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 0.7rem;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* ── FORM FIELDS ── */
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+.field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.field-hint { font-size: 0.72rem; color: var(--ink-3); margin-top: 0.2rem; }
+
+/* ── FILE PICKER ── */
+.file-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.file-picker-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-3);
+  border: 1px dashed var(--rule-2);
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+.file-picker-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: var(--bg-4);
+}
+.file-picker-btn .icon { font-size: 1.1rem; }
+.file-picker-btn.has-file { border-color: var(--accent-warm); border-style: solid; }
+.file-picker-btn.has-file .file-name { color: var(--accent-warm); }
+.file-picker-clear {
+  font-size: 0.7rem;
+  color: var(--red);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  display: none;
+}
+.file-picker-clear.visible { display: inline; }
+input[type="file"] { display: none; }
+
+/* ── AUDIO PREVIEW ── */
+.audio-preview {
+  background: var(--bg-3);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.8rem 1rem;
+  display: none;
+}
+.audio-preview.visible { display: block; }
+.audio-preview audio { width: 100%; height: 32px; }
+.audio-preview audio::-webkit-media-controls-panel { background: var(--bg-4); }
+.audio-preview-name { font-size: 0.75rem; color: var(--ink-3); margin-bottom: 0.4rem; }
+
+/* ── COVER PREVIEW ── */
+.cover-preview {
+  display: none;
+  gap: 0.75rem;
+  align-items: center;
+}
+.cover-preview.visible { display: flex; }
+.cover-preview img {
+  width: 64px; height: 64px;
+  border-radius: 2px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+}
+.cover-preview-info { font-size: 0.75rem; color: var(--ink-3); }
+
+/* ── COLORS ── */
+.color-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.color-field { display: flex; gap: 0.5rem; align-items: center; }
+.color-field input[type="color"] {
+  width: 36px; height: 36px;
+  padding: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.color-field input[type="text"] { flex: 1; }
+
+/* ── ARTIST GRID ── */
+.artist-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.artist-card-admin {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.artist-card-admin:hover { border-color: var(--rule-2); }
+.artist-card-admin .artist-mini-img {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-3);
+  margin-bottom: 0.3rem;
+}
+.artist-card-admin .artist-mini-img img { width: 100%; height: 100%; object-fit: cover; }
+.artist-card-admin h4 { font-size: 0.9rem; font-weight: 500; }
+.artist-card-admin span { font-size: 0.72rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.1em; }
+.artist-card-admin .card-actions {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+/* ── RELEASE GRID ── */
+.release-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.release-card-admin {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  position: relative;
+}
+.release-card-admin .release-mini-cover {
+  aspect-ratio: 1;
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.release-card-admin .release-mini-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.release-card-admin .release-card-info {
+  padding: 0.8rem;
+}
+.release-card-admin h4 { font-size: 0.88rem; font-weight: 500; margin-bottom: 0.2rem; }
+.release-card-admin span { font-size: 0.72rem; color: var(--ink-3); }
+.release-card-admin .card-actions { padding: 0.5rem 0.8rem 0.8rem; display: flex; gap: 0.3rem; }
+
+/* ── INFO PANEL ── */
+.info-panel {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent-warm);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.info-panel strong { color: var(--accent-warm); font-weight: 500; }
+.info-panel code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82em;
+  background: var(--bg-3);
+  padding: 0.1em 0.4em;
+  border-radius: 2px;
+  color: var(--ink);
+}
+.info-panel ol { padding-left: 1.2rem; margin-top: 0.5rem; }
+.info-panel li { margin-bottom: 0.3rem; }
+
+/* ── EXPORT SECTION ── */
+.export-section {
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.export-info h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+.export-info p { font-size: 0.8rem; color: var(--ink-3); }
+.export-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--bg-4);
+  border: 1px solid var(--rule-2);
+  padding: 0.8rem 1.2rem;
+  font-size: 0.85rem;
+  z-index: 9999;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s var(--ease-out);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 320px;
+  border-radius: 2px;
+}
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.toast.success { border-left: 3px solid var(--green); }
+.toast.error   { border-left: 3px solid var(--red); }
+.toast.info    { border-left: 3px solid var(--accent-warm); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN SCREEN
+============================================================ -->
+<div id="loginScreen">
+  <div class="login-logo">
+    <span>TIKICIA RECORDS</span>
+    <span>Panel de Administración</span>
+  </div>
+  <div class="login-box">
+    <h3>Acceso al panel</h3>
+    <label>
+      Contraseña
+      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password"/>
+    </label>
+    <div class="login-error" id="loginError">Contraseña incorrecta. Intenta de nuevo.</div>
+    <button class="btn-login" onclick="doLogin()">Entrar →</button>
+    <div style="font-size:0.72rem;color:var(--ink-4);text-align:center">
+      Contraseña por defecto: <code style="color:var(--ink-3)">tikicia2024</code>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP
+============================================================ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span>TIKICIA RECORDS</span>
+      <span class="topbar-badge">Admin Panel</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-success" onclick="exportDataJs()">⬇ Exportar data.js</button>
+      <button class="btn btn-outline" onclick="importDataJs()">⬆ Importar</button>
+      <a href="index.html" class="btn btn-outline">← Ver sitio</a>
+      <button class="btn btn-outline btn-sm" onclick="doLogout()" title="Cerrar sesión">✕</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('songs',this)">
+      🎵 Canciones <span class="tab-count" id="countSongs">0</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('artists',this)">
+      👤 Artistas <span class="tab-count" id="countArtists">0</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('releases',this)">
+      💿 Lanzamientos <span class="tab-count" id="countReleases">0</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('guide',this)">
+      📖 Guía
+    </button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- ── SONGS TAB ── -->
+    <div class="tab-panel active" id="tab-songs">
+      <div class="section-toolbar">
+        <h2>Tus <em>canciones</em></h2>
+        <button class="btn btn-primary" onclick="openDrawer('song')">+ Agregar canción</button>
+      </div>
+
+      <div id="songTableWrap">
+        <!-- rendered by JS -->
+      </div>
+
+      <div class="export-section">
+        <div class="export-info">
+          <h4>¿Listo para publicar?</h4>
+          <p>Exportá el data.js y copialo a tu carpeta del sitio web junto con los MP3.</p>
+        </div>
+        <div class="export-actions">
+          <button class="btn btn-success" onclick="exportDataJs()">⬇ Descargar data.js</button>
+          <button class="btn btn-outline" onclick="showGuide()">Ver instrucciones</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ARTISTS TAB ── -->
+    <div class="tab-panel" id="tab-artists">
+      <div class="section-toolbar">
+        <h2>Nuestros <em>artistas</em></h2>
+        <button class="btn btn-primary" onclick="openDrawer('artist')">+ Agregar artista</button>
+      </div>
+      <div id="artistGridWrap"><!-- rendered by JS --></div>
+    </div>
+
+    <!-- ── RELEASES TAB ── -->
+    <div class="tab-panel" id="tab-releases">
+      <div class="section-toolbar">
+        <h2><em>Álbumes</em> y EPs</h2>
+        <button class="btn btn-primary" onclick="openDrawer('release')">+ Agregar lanzamiento</button>
+      </div>
+      <div id="releaseGridWrap"><!-- rendered by JS --></div>
+    </div>
+
+    <!-- ── GUIDE TAB ── -->
+    <div class="tab-panel" id="tab-guide">
+      <h2 style="margin-bottom:1.5rem;font-weight:300">Guía de <em>uso</em></h2>
+
+      <div class="info-panel">
+        <strong>¿Cómo agregar canciones al sitio?</strong>
+        <ol>
+          <li>Hacé clic en <strong>"+ Agregar canción"</strong> y completá el formulario.</li>
+          <li>En el campo <strong>Audio MP3</strong>, seleccioná tu archivo. Se mostrará una previsualización para que puedas escucharlo.</li>
+          <li>En <strong>Carátula</strong>, seleccioná la imagen del álbum. Si no tenés, se genera automáticamente.</li>
+          <li>Guardá. La canción aparece en la lista.</li>
+          <li>Cuando tenés todo listo, hacé clic en <strong>"⬇ Exportar data.js"</strong>.</li>
+          <li>Copiá el archivo descargado a la carpeta de tu sitio, reemplazando el anterior.</li>
+          <li>Subí tus archivos MP3 a <code>assets/audio/</code> y las carátulas a <code>assets/covers/</code>.</li>
+        </ol>
+      </div>
+
+      <div class="info-panel" style="border-left-color:var(--blue)">
+        <strong>Estructura de carpetas del sitio</strong>
+        <br><br>
+        <code>tikicia-records/</code><br>
+        <code>&nbsp;&nbsp;├── index.html</code><br>
+        <code>&nbsp;&nbsp;├── styles.css</code><br>
+        <code>&nbsp;&nbsp;├── main.js</code><br>
+        <code>&nbsp;&nbsp;├── data.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← este archivo lo exportás desde aquí</code><br>
+        <code>&nbsp;&nbsp;├── admin.html</code><br>
+        <code>&nbsp;&nbsp;└── assets/</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── img/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← logo.png va aquí</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── audio/ &nbsp;&nbsp;&nbsp;← tus MP3 van aquí</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── covers/ &nbsp;&nbsp;← carátulas van aquí</code>
+      </div>
+
+      <div class="info-panel" style="border-left-color:var(--green)">
+        <strong>Cambiar la contraseña del panel</strong><br>
+        Abrí el archivo <code>admin.html</code> con un editor de texto, buscá la línea:<br>
+        <code>const ADMIN_PASSWORD = 'tikicia2024';</code><br>
+        y cambiá <code>'tikicia2024'</code> por la contraseña que quieras.
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ============================================================
+     DRAWER (Add / Edit)
+============================================================ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <h3 id="drawerTitle">Agregar canción</h3>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+    <!-- Filled by JS -->
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-outline" onclick="closeDrawer()">Cancelar</button>
+    <button class="btn btn-primary" onclick="saveDrawer()">Guardar ◆</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden file inputs -->
+<input type="file" id="fileAudio"  accept=".mp3,.wav,.ogg,.flac,.m4a" onchange="handleAudioFile(this)">
+<input type="file" id="fileCover"  accept="image/*" onchange="handleCoverFile(this)">
+<input type="file" id="fileImport" accept=".js"     onchange="handleImport(this)">
+
+<script src="data.js?v=1"></script>
+<script>
+/* ================================================================
+   TIKICIA ADMIN PANEL — JavaScript
+   ================================================================ */
+
+const ADMIN_PASSWORD = 'tikicia2024';
+const STORAGE_KEY    = 'tikicia_catalog';
+const SESSION_KEY    = 'tikicia_session';
+
+// ── State ──────────────────────────────────────────────────────
+let db = {
+  tracks:   [],
+  artists:  [],
+  releases: [],
+};
+
+let editingType  = null;  // 'song' | 'artist' | 'release'
+let editingId    = null;  // id of item being edited (null = new)
+let pendingAudio = null;  // { file, objUrl, name, path }
+let pendingCover = null;  // { file, objUrl, name, path }
+
+// ── Auth ───────────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('passwordInput').value;
+  const err = document.getElementById('loginError');
+  if (pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadData();
+    renderAll();
+    err.style.display = 'none';
+  } else {
+    err.style.display = 'block';
+    document.getElementById('passwordInput').value = '';
+  }
+}
+document.getElementById('passwordInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+// Check session on load
+if (sessionStorage.getItem(SESSION_KEY)) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  loadData();
+  renderAll();
+}
+
+// ── Data ───────────────────────────────────────────────────────
+function loadData() {
+  // First try localStorage (edited data)
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      db.tracks   = d.tracks   || [];
+      db.artists  = d.artists  || [];
+      db.releases = d.releases || [];
+      return;
+    } catch(e) {}
+  }
+  // Fall back to data.js globals
+  db.tracks   = (window.__TRACKS__   || []).map(t => ({...t}));
+  db.artists  = (window.__ARTISTS__  || []).map(a => ({...a}));
+  db.releases = (window.__RELEASES__ || []).map(r => ({...r}));
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  updateCounts();
+}
+
+// ── Tabs ───────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function showGuide() {
+  switchTab('guide', document.querySelectorAll('.tab-btn')[3]);
+}
+
+function updateCounts() {
+  document.getElementById('countSongs').textContent    = db.tracks.length;
+  document.getElementById('countArtists').textContent  = db.artists.length;
+  document.getElementById('countReleases').textContent = db.releases.length;
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function renderAll() {
+  renderSongs();
+  renderArtists();
+  renderReleases();
+  updateCounts();
+}
+
+function renderSongs() {
+  const wrap = document.getElementById('songTableWrap');
+  if (!db.tracks.length) {
+    wrap.innerHTML = `<div class="empty-state">
+      <div class="big-icon">🎵</div>
+      <p>Todavía no hay canciones.<br>Hacé clic en <strong>"+ Agregar canción"</strong> para empezar.</p>
+    </div>`;
+    return;
+  }
+  wrap.innerHTML = `<table class="track-table">
+    <thead><tr>
+      <th class="td-cover"></th>
+      <th>Canción</th>
+      <th>Álbum</th>
+      <th>Duración</th>
+      <th style="text-align:center">Audio</th>
+      <th>Acciones</th>
+    </tr></thead>
+    <tbody>
+      ${db.tracks.map((t,i) => `<tr>
+        <td class="td-cover">
+          <div class="mini-cover">
+            ${t.cover
+              ? `<img src="${t.cover}" alt="${t.title}" onerror="this.parentElement.innerHTML='<div class=mini-cover-placeholder style=background:${t.colorA}22>◆</div>'">`
+              : `<div class="mini-cover-placeholder" style="background:linear-gradient(135deg,${t.colorA||'#e8520f'}33,${t.colorB||'#d08e30'}33)">◆</div>`
+            }
+          </div>
+        </td>
+        <td class="td-title">
+          <strong>${escHtml(t.title)}</strong>
+          <span>${escHtml(t.artist)}</span>
+        </td>
+        <td style="color:var(--ink-3);font-size:0.82rem">${escHtml(t.album||'—')}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--ink-3)">${t.duration||'—'}</td>
+        <td class="td-audio">
+          <span class="audio-dot ${t.audio ? 'has-audio' : 'no-audio'}" title="${t.audio ? '✓ ' + t.audio : 'Sin audio'}"></span>
+        </td>
+        <td class="td-actions">
+          <button class="btn btn-outline btn-sm" onclick="editItem('song','${t.id}')">✎ Editar</button>
+          <button class="btn btn-danger btn-sm"  onclick="deleteItem('song','${t.id}')">✕</button>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderArtists() {
+  const wrap = document.getElementById('artistGridWrap');
+  if (!db.artists.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="big-icon">👤</div><p>No hay artistas todavía.</p></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="artist-grid-admin">
+    ${db.artists.map(a => `<div class="artist-card-admin">
+      <div class="artist-mini-img">
+        ${a.photo
+          ? `<img src="${a.photo}" alt="${a.name}" onerror="this.parentElement.innerHTML='<div style=width:100%;height:100%;background:linear-gradient(135deg,${a.colorA||'#e8520f'}55,${a.colorB||'#d08e30'}55);border-radius:50%;display:flex;align-items:center;justify-content:center>◆</div>'">`
+          : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${a.colorA||'#e8520f'}55,${a.colorB||'#d08e30'}55);border-radius:50%;display:flex;align-items:center;justify-content:center">◆</div>`
+        }
+      </div>
+      <h4>${escHtml(a.name)}</h4>
+      <span>${escHtml(a.genre)}</span>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editItem('artist','${a.id}')">✎</button>
+        <button class="btn btn-danger btn-sm"  onclick="deleteItem('artist','${a.id}')">✕</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderReleases() {
+  const wrap = document.getElementById('releaseGridWrap');
+  if (!db.releases.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="big-icon">💿</div><p>No hay lanzamientos todavía.</p></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="release-grid-admin">
+    ${db.releases.map(r => `<div class="release-card-admin">
+      <div class="release-mini-cover">
+        ${r.cover
+          ? `<img src="${r.cover}" alt="${r.title}" onerror="this.parentElement.style.background='linear-gradient(135deg,${r.colorA||'#e8520f'},${r.colorB||'#d08e30'})'">`
+          : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.colorA||'#e8520f'}55,${r.colorB||'#d08e30'}55);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff8">◆</div>`
+        }
+      </div>
+      <div class="release-card-info">
+        <h4>${escHtml(r.title)}</h4>
+        <span>${escHtml(r.artist)} · ${r.type} · ${r.year}</span>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="editItem('release','${r.id}')">✎ Editar</button>
+        <button class="btn btn-danger btn-sm"  onclick="deleteItem('release','${r.id}')">✕</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── Drawer ─────────────────────────────────────────────────────
+function openDrawer(type, id = null) {
+  editingType = type;
+  editingId   = id;
+  pendingAudio = null;
+  pendingCover = null;
+
+  const overlay = document.getElementById('drawerOverlay');
+  const drawer  = document.getElementById('drawer');
+  const title   = document.getElementById('drawerTitle');
+  const body    = document.getElementById('drawerBody');
+
+  const labels = { song: 'canción', artist: 'artista', release: 'lanzamiento' };
+  title.textContent = (id ? 'Editar ' : 'Agregar ') + labels[type];
+
+  // Get item to edit
+  let item = null;
+  if (id) {
+    if (type === 'song')    item = db.tracks.find(t => t.id === id);
+    if (type === 'artist')  item = db.artists.find(a => a.id === id);
+    if (type === 'release') item = db.releases.find(r => r.id === id);
+  }
+
+  body.innerHTML = buildForm(type, item);
+  overlay.classList.add('open');
+  drawer.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Init color pickers
+  if (item) {
+    syncColorPicker('colorA');
+    syncColorPicker('colorB');
+  }
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+  editingType = null;
+  editingId   = null;
+  pendingAudio = null;
+  pendingCover = null;
+}
+
+function buildForm(type, item = null) {
+  if (type === 'song')    return buildSongForm(item);
+  if (type === 'artist')  return buildArtistForm(item);
+  if (type === 'release') return buildReleaseForm(item);
+}
+
+function buildSongForm(t = null) {
+  const artistOptions = db.artists.map(a =>
+    `<option value="${escAttr(a.name)}" ${t?.artist === a.name ? 'selected' : ''}>${escHtml(a.name)}</option>`
+  ).join('');
+  const albumOptions = db.releases.map(r =>
+    `<option value="${escAttr(r.title)}" ${t?.album === r.title ? 'selected' : ''}>${escHtml(r.title)}</option>`
+  ).join('');
+
+  return `
+    <div class="field-row">
+      <div class="field">
+        <label for="f_title">Título *</label>
+        <input id="f_title" type="text" value="${escAttr(t?.title||'')}" placeholder="Nombre de la canción" required>
+      </div>
+      <div class="field">
+        <label for="f_duration">Duración</label>
+        <input id="f_duration" type="text" value="${escAttr(t?.duration||'')}" placeholder="3:42">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="f_artist">Artista *</label>
+        <input id="f_artist" type="text" value="${escAttr(t?.artist||'')}" placeholder="Nombre del artista" list="artistList">
+        <datalist id="artistList">${artistOptions}</datalist>
+      </div>
+      <div class="field">
+        <label for="f_album">Álbum / Single</label>
+        <input id="f_album" type="text" value="${escAttr(t?.album||'')}" placeholder="Nombre del álbum" list="albumList">
+        <datalist id="albumList">${albumOptions}</datalist>
+      </div>
+    </div>
+
+    <!-- AUDIO FILE -->
+    <div class="field">
+      <label>Archivo de audio (MP3)</label>
+      <div class="file-picker">
+        <button type="button" class="file-picker-btn ${t?.audio ? 'has-file' : ''}" id="audioBtnTrigger" onclick="document.getElementById('fileAudio').click()">
+          <span class="icon">🎵</span>
+          <span class="file-name" id="audioFileName">${t?.audio ? t.audio.split('/').pop() : 'Seleccionar archivo MP3…'}</span>
+        </button>
+        <button type="button" class="file-picker-clear ${t?.audio ? 'visible' : ''}" id="audioClearBtn" onclick="clearAudio()">✕ Quitar audio</button>
+      </div>
+      <div class="field-hint">El archivo quedará en <code>assets/audio/</code> en tu servidor.</div>
+    </div>
+
+    <!-- AUDIO PREVIEW -->
+    <div class="audio-preview" id="audioPreview" ${t?.audio ? 'style="display:block"' : ''}>
+      <div class="audio-preview-name" id="audioPreviewName">${t?.audio || ''}</div>
+      ${t?.audio ? `<audio controls src="${t.audio}" style="width:100%;height:32px"></audio>` : ''}
+    </div>
+
+    <!-- COVER FILE -->
+    <div class="field">
+      <label>Carátula (imagen)</label>
+      <div class="file-picker">
+        <button type="button" class="file-picker-btn ${t?.cover ? 'has-file' : ''}" id="coverBtnTrigger" onclick="document.getElementById('fileCover').click()">
+          <span class="icon">🖼</span>
+          <span class="file-name" id="coverFileName">${t?.cover ? t.cover.split('/').pop() : 'Seleccionar imagen…'}</span>
+        </button>
+        <button type="button" class="file-picker-clear ${t?.cover ? 'visible' : ''}" id="coverClearBtn" onclick="clearCover()">✕ Quitar imagen</button>
+      </div>
+    </div>
+
+    <!-- COVER PREVIEW -->
+    <div class="cover-preview ${t?.cover ? 'visible' : ''}" id="coverPreview">
+      ${t?.cover ? `<img src="${t.cover}" id="coverPreviewImg" alt="Carátula">` : `<img id="coverPreviewImg" alt="Carátula" style="display:none">`}
+      <div class="cover-preview-info" id="coverPreviewInfo">${t?.cover ? t.cover : ''}</div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="field">
+      <label>Colores del placeholder (si no hay imagen)</label>
+      <div class="color-row">
+        <div class="field">
+          <label for="f_colorA">Color A</label>
+          <div class="color-field">
+            <input type="color" id="f_colorA_picker" value="${t?.colorA||'#e8520f'}" oninput="document.getElementById('f_colorA').value=this.value">
+            <input type="text"  id="f_colorA" value="${t?.colorA||'#e8520f'}" placeholder="#e8520f" oninput="document.getElementById('f_colorA_picker').value=this.value">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f_colorB">Color B</label>
+          <div class="color-field">
+            <input type="color" id="f_colorB_picker" value="${t?.colorB||'#d08e30'}" oninput="document.getElementById('f_colorB').value=this.value">
+            <input type="text"  id="f_colorB" value="${t?.colorB||'#d08e30'}" placeholder="#d08e30" oninput="document.getElementById('f_colorB_picker').value=this.value">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="f_audioPath" value="${escAttr(t?.audio||'')}">
+    <input type="hidden" id="f_coverPath" value="${escAttr(t?.cover||'')}">
+  `;
+}
+
+function buildArtistForm(a = null) {
+  return `
+    <div class="field-row">
+      <div class="field">
+        <label for="f_name">Nombre *</label>
+        <input id="f_name" type="text" value="${escAttr(a?.name||'')}" placeholder="Nombre artístico">
+      </div>
+      <div class="field">
+        <label for="f_genre">Género *</label>
+        <input id="f_genre" type="text" value="${escAttr(a?.genre||'')}" placeholder="Cumbia, Tropical…">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Foto del artista</label>
+      <div class="file-picker">
+        <button type="button" class="file-picker-btn ${a?.photo ? 'has-file' : ''}" onclick="document.getElementById('fileCover').click()">
+          <span class="icon">📷</span>
+          <span class="file-name" id="coverFileName">${a?.photo ? a.photo.split('/').pop() : 'Seleccionar foto…'}</span>
+        </button>
+        <button type="button" class="file-picker-clear ${a?.photo ? 'visible' : ''}" id="coverClearBtn" onclick="clearCover()">✕ Quitar foto</button>
+      </div>
+    </div>
+    <div class="cover-preview ${a?.photo ? 'visible' : ''}" id="coverPreview">
+      ${a?.photo ? `<img src="${a.photo}" id="coverPreviewImg" alt="Foto">` : `<img id="coverPreviewImg" alt="Foto" style="display:none">`}
+      <div class="cover-preview-info" id="coverPreviewInfo">${a?.photo||''}</div>
+    </div>
+
+    <div class="field">
+      <label>Colores del placeholder</label>
+      <div class="color-row">
+        <div class="field">
+          <label>Color A</label>
+          <div class="color-field">
+            <input type="color" id="f_colorA_picker" value="${a?.colorA||'#e8520f'}" oninput="document.getElementById('f_colorA').value=this.value">
+            <input type="text"  id="f_colorA" value="${a?.colorA||'#e8520f'}">
+          </div>
+        </div>
+        <div class="field">
+          <label>Color B</label>
+          <div class="color-field">
+            <input type="color" id="f_colorB_picker" value="${a?.colorB||'#d08e30'}" oninput="document.getElementById('f_colorB').value=this.value">
+            <input type="text"  id="f_colorB" value="${a?.colorB||'#d08e30'}">
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="f_coverPath" value="${escAttr(a?.photo||'')}">
+  `;
+}
+
+function buildReleaseForm(r = null) {
+  const artistOptions = db.artists.map(a =>
+    `<option value="${escAttr(a.name)}" ${r?.artist === a.name ? 'selected' : ''}>${escHtml(a.name)}</option>`
+  ).join('');
+  return `
+    <div class="field-row">
+      <div class="field">
+        <label for="f_title">Título *</label>
+        <input id="f_title" type="text" value="${escAttr(r?.title||'')}" placeholder="Nombre del álbum">
+      </div>
+      <div class="field">
+        <label for="f_year">Año</label>
+        <input id="f_year" type="number" value="${r?.year||new Date().getFullYear()}" placeholder="2025" min="2000" max="2099">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="f_artist">Artista *</label>
+        <input id="f_artist" type="text" value="${escAttr(r?.artist||'')}" list="artistList2">
+        <datalist id="artistList2">${artistOptions}</datalist>
+      </div>
+      <div class="field">
+        <label for="f_type">Tipo</label>
+        <select id="f_type">
+          <option value="Álbum"  ${r?.type==='Álbum'  ? 'selected':''}>Álbum</option>
+          <option value="EP"     ${r?.type==='EP'     ? 'selected':''}>EP</option>
+          <option value="Single" ${r?.type==='Single' ? 'selected':''}>Single</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f_large">
+        <input type="checkbox" id="f_large" ${r?.large ? 'checked' : ''} style="width:auto;margin-right:0.4rem">
+        Destacado (tamaño grande en el bento)
+      </label>
+    </div>
+
+    <div class="field">
+      <label>Carátula</label>
+      <div class="file-picker">
+        <button type="button" class="file-picker-btn ${r?.cover ? 'has-file' : ''}" onclick="document.getElementById('fileCover').click()">
+          <span class="icon">🖼</span>
+          <span class="file-name" id="coverFileName">${r?.cover ? r.cover.split('/').pop() : 'Seleccionar carátula…'}</span>
+        </button>
+        <button type="button" class="file-picker-clear ${r?.cover ? 'visible' : ''}" id="coverClearBtn" onclick="clearCover()">✕ Quitar</button>
+      </div>
+    </div>
+    <div class="cover-preview ${r?.cover ? 'visible' : ''}" id="coverPreview">
+      ${r?.cover ? `<img src="${r.cover}" id="coverPreviewImg" alt="Carátula">` : `<img id="coverPreviewImg" alt="Carátula" style="display:none">`}
+      <div class="cover-preview-info" id="coverPreviewInfo">${r?.cover||''}</div>
+    </div>
+
+    <div class="field">
+      <label>Colores</label>
+      <div class="color-row">
+        <div class="field">
+          <label>Color A</label>
+          <div class="color-field">
+            <input type="color" id="f_colorA_picker" value="${r?.colorA||'#e8520f'}" oninput="document.getElementById('f_colorA').value=this.value">
+            <input type="text"  id="f_colorA" value="${r?.colorA||'#e8520f'}">
+          </div>
+        </div>
+        <div class="field">
+          <label>Color B</label>
+          <div class="color-field">
+            <input type="color" id="f_colorB_picker" value="${r?.colorB||'#d08e30'}" oninput="document.getElementById('f_colorB').value=this.value">
+            <input type="text"  id="f_colorB" value="${r?.colorB||'#d08e30'}">
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="f_coverPath" value="${escAttr(r?.cover||'')}">
+  `;
+}
+
+// ── Save Drawer ─────────────────────────────────────────────────
+function saveDrawer() {
+  if (editingType === 'song')    saveSong();
+  if (editingType === 'artist')  saveArtist();
+  if (editingType === 'release') saveRelease();
+}
+
+function saveSong() {
+  const title  = document.getElementById('f_title')?.value.trim();
+  const artist = document.getElementById('f_artist')?.value.trim();
+  if (!title || !artist) { showToast('error', 'Título y artista son obligatorios.'); return; }
+
+  // Update audio path if a new file was picked
+  let audioPath = document.getElementById('f_audioPath')?.value || '';
+  let coverPath = document.getElementById('f_coverPath')?.value || '';
+  if (pendingAudio) audioPath = pendingAudio.path;
+  if (pendingCover) coverPath = pendingCover.path;
+
+  const song = {
+    id:       editingId || 't' + Date.now(),
+    title,
+    artist,
+    album:    document.getElementById('f_album')?.value.trim() || '',
+    duration: document.getElementById('f_duration')?.value.trim() || '',
+    audio:    audioPath,
+    cover:    coverPath,
+    colorA:   document.getElementById('f_colorA')?.value || '#e8520f',
+    colorB:   document.getElementById('f_colorB')?.value || '#d08e30',
+  };
+
+  if (editingId) {
+    const idx = db.tracks.findIndex(t => t.id === editingId);
+    if (idx > -1) db.tracks[idx] = song;
+  } else {
+    db.tracks.push(song);
+  }
+
+  saveData();
+  renderSongs();
+  closeDrawer();
+  showToast('success', `"${title}" guardada correctamente.`);
+}
+
+function saveArtist() {
+  const name  = document.getElementById('f_name')?.value.trim();
+  const genre = document.getElementById('f_genre')?.value.trim();
+  if (!name) { showToast('error', 'El nombre es obligatorio.'); return; }
+
+  let photoPath = document.getElementById('f_coverPath')?.value || '';
+  if (pendingCover) photoPath = pendingCover.path;
+
+  const artist = {
+    id:     editingId || 'a' + Date.now(),
+    name,
+    genre:  genre || '',
+    photo:  photoPath,
+    colorA: document.getElementById('f_colorA')?.value || '#e8520f',
+    colorB: document.getElementById('f_colorB')?.value || '#d08e30',
+  };
+
+  if (editingId) {
+    const idx = db.artists.findIndex(a => a.id === editingId);
+    if (idx > -1) db.artists[idx] = artist;
+  } else {
+    db.artists.push(artist);
+  }
+
+  saveData();
+  renderArtists();
+  closeDrawer();
+  showToast('success', `"${name}" guardado.`);
+}
+
+function saveRelease() {
+  const title  = document.getElementById('f_title')?.value.trim();
+  const artist = document.getElementById('f_artist')?.value.trim();
+  if (!title) { showToast('error', 'El título es obligatorio.'); return; }
+
+  let coverPath = document.getElementById('f_coverPath')?.value || '';
+  if (pendingCover) coverPath = pendingCover.path;
+
+  const rel = {
+    id:     editingId || 'r' + Date.now(),
+    title,
+    artist: artist || '',
+    type:   document.getElementById('f_type')?.value || 'Álbum',
+    year:   parseInt(document.getElementById('f_year')?.value) || new Date().getFullYear(),
+    large:  document.getElementById('f_large')?.checked || false,
+    cover:  coverPath,
+    colorA: document.getElementById('f_colorA')?.value || '#e8520f',
+    colorB: document.getElementById('f_colorB')?.value || '#d08e30',
+  };
+
+  if (editingId) {
+    const idx = db.releases.findIndex(r => r.id === editingId);
+    if (idx > -1) db.releases[idx] = rel;
+  } else {
+    db.releases.push(rel);
+  }
+
+  saveData();
+  renderReleases();
+  closeDrawer();
+  showToast('success', `"${title}" guardado.`);
+}
+
+// ── Edit / Delete ───────────────────────────────────────────────
+function editItem(type, id) {
+  openDrawer(type, id);
+}
+
+function deleteItem(type, id) {
+  let name = id;
+  if (type === 'song')    { const t = db.tracks.find(x => x.id === id);   name = t?.title  || id; }
+  if (type === 'artist')  { const a = db.artists.find(x => x.id === id);  name = a?.name   || id; }
+  if (type === 'release') { const r = db.releases.find(x => x.id === id); name = r?.title  || id; }
+
+  if (!confirm(`¿Eliminar "${name}"?`)) return;
+
+  if (type === 'song')    db.tracks   = db.tracks.filter(t => t.id !== id);
+  if (type === 'artist')  db.artists  = db.artists.filter(a => a.id !== id);
+  if (type === 'release') db.releases = db.releases.filter(r => r.id !== id);
+
+  saveData();
+  renderAll();
+  showToast('info', `"${name}" eliminado.`);
+}
+
+// ── File Handlers ───────────────────────────────────────────────
+function handleAudioFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const path = 'assets/audio/' + file.name;
+  const objUrl = URL.createObjectURL(file);
+  pendingAudio = { file, objUrl, name: file.name, path };
+
+  const btn  = document.getElementById('audioBtnTrigger');
+  const fname= document.getElementById('audioFileName');
+  const clear= document.getElementById('audioClearBtn');
+  const prev = document.getElementById('audioPreview');
+  const pname= document.getElementById('audioPreviewName');
+  const pPath= document.getElementById('f_audioPath');
+
+  if (btn)   btn.classList.add('has-file');
+  if (fname) fname.textContent = file.name;
+  if (clear) clear.classList.add('visible');
+  if (pPath) pPath.value = path;
+  if (prev) {
+    prev.style.display = 'block';
+    prev.innerHTML = `<div class="audio-preview-name">📁 ${path}</div>
+      <audio controls src="${objUrl}" style="width:100%;height:32px"></audio>`;
+  }
+  if (pname) pname.textContent = path;
+
+  // Reset input so same file can be re-selected
+  input.value = '';
+}
+
+function handleCoverFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const path = 'assets/covers/' + file.name;
+  const objUrl = URL.createObjectURL(file);
+  pendingCover = { file, objUrl, name: file.name, path };
+
+  const btn  = document.getElementById('coverBtnTrigger');
+  const fname= document.getElementById('coverFileName');
+  const clear= document.getElementById('coverClearBtn');
+  const prev = document.getElementById('coverPreview');
+  const pimg = document.getElementById('coverPreviewImg');
+  const pinfo= document.getElementById('coverPreviewInfo');
+  const pPath= document.getElementById('f_coverPath');
+
+  if (btn)   btn.classList.add('has-file');
+  if (fname) fname.textContent = file.name;
+  if (clear) clear.classList.add('visible');
+  if (pPath) pPath.value = path;
+  if (prev)  prev.classList.add('visible');
+  if (pimg)  { pimg.src = objUrl; pimg.style.display = ''; }
+  if (pinfo) pinfo.textContent = path;
+
+  input.value = '';
+}
+
+function clearAudio() {
+  pendingAudio = null;
+  const btn  = document.getElementById('audioBtnTrigger');
+  const fname= document.getElementById('audioFileName');
+  const clear= document.getElementById('audioClearBtn');
+  const prev = document.getElementById('audioPreview');
+  const pPath= document.getElementById('f_audioPath');
+  if (btn)   btn.classList.remove('has-file');
+  if (fname) fname.textContent = 'Seleccionar archivo MP3…';
+  if (clear) clear.classList.remove('visible');
+  if (prev)  prev.style.display = 'none';
+  if (pPath) pPath.value = '';
+}
+
+function clearCover() {
+  pendingCover = null;
+  const btn  = document.getElementById('coverBtnTrigger');
+  const fname= document.getElementById('coverFileName');
+  const clear= document.getElementById('coverClearBtn');
+  const prev = document.getElementById('coverPreview');
+  const pimg = document.getElementById('coverPreviewImg');
+  const pPath= document.getElementById('f_coverPath');
+  if (btn)   btn.classList.remove('has-file');
+  if (fname) fname.textContent = 'Seleccionar imagen…';
+  if (clear) clear.classList.remove('visible');
+  if (prev)  prev.classList.remove('visible');
+  if (pimg)  pimg.style.display = 'none';
+  if (pPath) pPath.value = '';
+}
+
+function syncColorPicker(id) {
+  const picker = document.getElementById(id + '_picker');
+  const text   = document.getElementById(id);
+  if (picker && text) {
+    picker.value = text.value;
+  }
+}
+
+// ── Export data.js ──────────────────────────────────────────────
+function exportDataJs() {
+  const js = `/* =====================================================================
+   TIKICIA RECORDS — Catálogo de datos
+   Generado desde el panel admin · ${new Date().toLocaleDateString('es-CR')}
+
+   Para agregar canciones: abrí admin.html y usá el panel.
+   ===================================================================== */
+
+(function () {
+  "use strict";
+
+  window.__ARTISTS__ = ${JSON.stringify(db.artists, null, 4)};
+
+  window.__RELEASES__ = ${JSON.stringify(db.releases, null, 4)};
+
+  window.__TRACKS__ = ${JSON.stringify(db.tracks, null, 4)};
+
+})();
+`;
+  const blob = new Blob([js], { type: 'text/javascript' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'data.js';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('success', 'data.js descargado. Copialo a tu carpeta del sitio.');
+}
+
+// ── Import data.js ──────────────────────────────────────────────
+function importDataJs() {
+  document.getElementById('fileImport').click();
+}
+
+function handleImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      // Execute the JS in a sandboxed way
+      const script = document.createElement('script');
+      script.textContent = e.target.result;
+      document.head.appendChild(script);
+      document.head.removeChild(script);
+
+      if (window.__TRACKS__) {
+        db.tracks   = window.__TRACKS__;
+        db.artists  = window.__ARTISTS__ || db.artists;
+        db.releases = window.__RELEASES__ || db.releases;
+        saveData();
+        renderAll();
+        showToast('success', `Importado: ${db.tracks.length} canciones, ${db.artists.length} artistas.`);
+      }
+    } catch(err) {
+      showToast('error', 'Error al importar el archivo.');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ── Toast ───────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  const icons = { success: '✓', error: '⚠', info: 'ℹ' };
+  t.innerHTML = `<span>${icons[type]||'◆'}</span> ${msg}`;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── Utils ───────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) {
+  return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+</script>
+</body>
+</html>
