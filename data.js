@@ -167,12 +167,12 @@ window.__ARTISTS__ = [
 // ================================================================
 
 window.__RELEASES__ = [
-  { id: "r01", title: "Fiesta Brava",      artist: "Los Karkis",      type: "Álbum",  year: 2025, large: true,  cover: "", colorA: "#c8341a", colorB: "#8e2d9a" },
-  { id: "r02", title: "Sonidero Vol. 1",   artist: "DJ Fiesta",       type: "EP",     year: 2025, large: false, cover: "", colorA: "#8e2d9a", colorB: "#2c56c0" },
-  { id: "r03", title: "Tropikana",         artist: "Tropikana Sound", type: "Álbum",  year: 2024, large: false, cover: "", colorA: "#d08e30", colorB: "#e8520f" },
-  { id: "r04", title: "Mar Adentro",       artist: "Manuel del Mar",  type: "Álbum",  year: 2025, large: true,  cover: "", colorA: "#2c56c0", colorB: "#d08e30" },
-  { id: "r05", title: "Caliente",          artist: "Kombo Caliente",  type: "EP",     year: 2025, large: false, cover: "", colorA: "#e8520f", colorB: "#d08e30" },
-  { id: "r06", title: "Cumbia Pa' Bailar", artist: "Deylis E.C",      type: "Single", year: 2026, large: false, cover: "", colorA: "#c8341a", colorB: "#e8520f" },
+  { id: "r01", title: "El Viejón",              artist: "Jaxdane Flores",        type: "Single", year: 2025, large: true,  cover: "", colorA: "#c8341a", colorB: "#e8520f" },
+  { id: "r02", title: "Sencillo",               artist: "Leo Jimenez",           type: "Single", year: 2025, large: false, cover: "", colorA: "#d08e30", colorB: "#e8520f" },
+  { id: "r03", title: "Sencillo",               artist: "Danny Jimenez",         type: "Single", year: 2025, large: false, cover: "", colorA: "#8e2d9a", colorB: "#2c56c0" },
+  { id: "r04", title: "Cumbia Pa' Bailar",      artist: "Deylis Enrique Córdoba",type: "Single", year: 2026, large: true,  cover: "", colorA: "#c8341a", colorB: "#8e2d9a" },
+  { id: "r05", title: "Sencillo",               artist: "Los Compitas del ritmo", type: "Single", year: 2025, large: false, cover: "", colorA: "#2c56c0", colorB: "#d08e30" },
+  { id: "r06", title: "Jungle Mix",             artist: "Jungle Tico",           type: "Single", year: 2026, large: false, cover: "", colorA: "#e8520f", colorB: "#d08e30" },
 ];
 
 })();

@@ -751,8 +751,9 @@
     }));
 
     list.innerHTML = cat.tracks.map((t,i) => {
-      // Prioridad: blob de IndexedDB → ruta en data.js → SVG placeholder
-      const covSrc = covMap[t.id] || t.cover || '';
+      // Prioridad: blob de IndexedDB → carátula propia → foto del artista → SVG
+      const artistPh = (window.__ARTISTS__||[]).find(a => a.name === t.artist)?.photo || '';
+      const covSrc = covMap[t.id] || t.cover || artistPh || '';
       const cov = covSrc
         ? `<img src="${covSrc}" alt="${t.title}" loading="lazy" onerror="this.style.display='none';this.parentNode.insertAdjacentHTML('beforeend','${makeCov(t.colorA||'#e8520f',t.colorB||'#d08e30',t.title).replace(/\\/g,'\\\\').replace(/'/g,"&#39;").replace(/\n/g,' ')}')"/>`
         : makeCov(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title);

@@ -14,6 +14,16 @@
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
+  // ─── Helper: obtiene la foto de un artista por nombre ────────────────
+  function artistPhoto(name) {
+    return (window.__ARTISTS__ || []).find(a => a.name === name)?.photo || '';
+  }
+
+  // ─── Helper: cover src con fallback a foto de artista ────────────────
+  function coverSrc(item) {
+    return item.cover || artistPhoto(item.artist) || '';
+  }
+
   // ─── SVG cover generator ─────────────────────────────────────────────
   function makeCover(colorA, colorB, label, size = 200) {
     const id = 'g' + Math.random().toString(36).slice(2);
@@ -107,8 +117,9 @@
     if (!list || !tracks?.length) return;
 
     list.innerHTML = tracks.map((t, i) => {
-      const coverHtml = t.cover
-        ? `<img src="${t.cover}" alt="${t.title}" loading="lazy" onerror="this.outerHTML='${makeCover(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title)}'"/>`
+      const src = coverSrc(t);
+      const coverHtml = src
+        ? `<img src="${src}" alt="${t.title}" loading="lazy" onerror="this.outerHTML='${makeCover(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title)}'"/>`
         : makeCover(t.colorA || '#e8520f', t.colorB || '#d08e30', t.title);
       return `<div class="track" data-id="${t.id}" role="row" tabindex="0" aria-label="${t.title} · ${t.artist}">
   <div class="track-num" role="cell">
@@ -178,8 +189,9 @@
     if (!bento || !releases?.length) return;
 
     bento.innerHTML = releases.map(r => {
-      const coverHtml = r.cover
-        ? `<img src="${r.cover}" alt="${r.title}" loading="lazy" onerror="this.outerHTML='${makeCover(r.colorA||'#e8520f', r.colorB||'#d08e30', r.title, 400)}'"/>`
+      const src = coverSrc(r);
+      const coverHtml = src
+        ? `<img src="${src}" alt="${r.title}" loading="lazy" onerror="this.outerHTML='${makeCover(r.colorA||'#e8520f', r.colorB||'#d08e30', r.title, 400)}'"/>`
         : makeCover(r.colorA || '#e8520f', r.colorB || '#d08e30', r.title, 400);
       const cls = r.large ? 'release large' : 'release';
       // Find first track of this release
@@ -246,8 +258,9 @@
       if (!t) return;
       title.textContent  = t.title;
       artist.textContent = t.artist;
-      if (t.cover) {
-        cover.innerHTML = `<img src="${t.cover}" alt="${t.title}" onerror="this.outerHTML='${makeCover(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title)}'">`;
+      const covSrc = t.cover || artistPhoto(t.artist);
+      if (covSrc) {
+        cover.innerHTML = `<img src="${covSrc}" alt="${t.title}" onerror="this.outerHTML='${makeCover(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title)}'">`;
       } else {
         cover.innerHTML = makeCover(t.colorA || '#e8520f', t.colorB || '#d08e30', t.title);
       }
@@ -452,8 +465,9 @@
         const tracks = window.__TRACKS__;
         if (!list || !tracks?.length) return;
         list.innerHTML = tracks.map((t, i) => {
-          const coverHtml = t.cover
-            ? `<img src="${t.cover}" alt="${t.title}" loading="lazy"/>`
+          const s = coverSrc(t);
+          const coverHtml = s
+            ? `<img src="${s}" alt="${t.title}" loading="lazy" onerror="this.outerHTML='${makeCover(t.colorA||'#e8520f',t.colorB||'#d08e30',t.title)}'"/>`
             : makeCover(t.colorA || '#e8520f', t.colorB || '#d08e30', t.title);
           return `<div class="track" data-id="${t.id}" role="row" tabindex="0">
   <div class="track-num"><span>${i + 1}</span><span class="track-play">▶</span></div>
