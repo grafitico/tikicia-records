@@ -9,12 +9,8 @@
 //
 //  2. Copiá uno de los bloques de canción de abajo
 //
-//  3. Pegalo al final de la lista y cambiá:
-//        title   → nombre de la canción
-//        artist  → nombre del artista
-//        audio   → nombre exacto del archivo MP3
-//
-//  Guardá con "Commit changes" y listo ✓
+//  3. Pegalo antes de la línea ══ y cambiá los datos.
+//     Guardá con "Commit changes" y listo ✓
 //
 // ================================================================
 
@@ -97,7 +93,7 @@ window.__TRACKS__ = [
   //   artist:   "Nombre del artista",
   //   album:    "Nombre del álbum o Sencillo",
   //   duration: "3:30",
-  //   audio:    "assets/audio/nombre-del-archivo.mp3",
+  //   audio:    "audio/nombre-del-archivo.mp3",
   //   cover:    "assets/covers/nombre-caratula.jpg",
   //   colorA: "#e8520f", colorB: "#d08e30"
   // },
@@ -107,17 +103,62 @@ window.__TRACKS__ = [
 
 // ================================================================
 //  👤 ARTISTAS
-//  Para agregar uno: copiá la última línea, cambiá los datos
+//  Para las fotos: subí la imagen a assets/covers/ en GitHub
+//  y poné el nombre exacto del archivo en "photo"
 // ================================================================
 
 window.__ARTISTS__ = [
-  { id: "a01", name: "Jaxdane Flores",  genre: "Norteña",    photo: "", colorA: "#c8341a", colorB: "#e8520f" },
-  { id: "a02", name: "Tropikana Sound", genre: "Cumbia",     photo: "", colorA: "#d08e30", colorB: "#e8520f" },
-  { id: "a03", name: "DJ Fiesta",       genre: "Sonidero",   photo: "", colorA: "#8e2d9a", colorB: "#2c56c0" },
-  { id: "a04", name: "Deylis E.C",      genre: "Cumbia",     photo: "", colorA: "#c8341a", colorB: "#8e2d9a" },
-  { id: "a05", name: "Manuel del Mar",  genre: "Tropical",   photo: "", colorA: "#2c56c0", colorB: "#d08e30" },
-  { id: "a06", name: "Kombo Caliente",  genre: "Chichamera", photo: "", colorA: "#e8520f", colorB: "#d08e30" },
+
+  {
+    id: "a01",
+    name:   "Jaxdane Flores",
+    genre:  "Norteña",
+    photo:  "assets/covers/hf_20260406_210533_a38916b1-57ad-4bfd-8f06-639fb826436a.png",
+    colorA: "#c8341a", colorB: "#e8520f"
+  },
+
+  {
+    id: "a02",
+    name:   "Leo Jimenez",
+    genre:  "Banda",
+    photo:  "assets/covers/Captura.JPG",
+    colorA: "#d08e30", colorB: "#e8520f"
+  },
+
+  {
+    id: "a03",
+    name:   "Danny Jimenez",
+    genre:  "Sonidero",
+    photo:  "assets/covers/WhatsApp Image 2026-04-28 at 2.53.18 PM.jpeg",
+    colorA: "#8e2d9a", colorB: "#2c56c0"
+  },
+
+  {
+    id: "a04",
+    name:   "Deylis Enrique Córdoba",
+    genre:  "Cumbia",
+    photo:  "assets/covers/Captura.JPG",
+    colorA: "#c8341a", colorB: "#8e2d9a"
+  },
+
+  {
+    id: "a05",
+    name:   "Los Compitas del ritmo",
+    genre:  "Norteño",
+    photo:  "assets/covers/499194521_704570635295790_5993493926384281360_n.jpg",
+    colorA: "#2c56c0", colorB: "#d08e30"
+  },
+
+  {
+    id: "a06",
+    name:   "Jungle Tico",
+    genre:  "Reggae Dancehall",
+    photo:  "assets/covers/499194521_704570635295790_5993493926384281360_n.jpg",
+    colorA: "#e8520f", colorB: "#d08e30"
+  },
+
   // { id: "a07", name: "Nuevo Artista", genre: "Género", photo: "", colorA: "#c8341a", colorB: "#d08e30" },
+
 ];
 
 
