@@ -121,7 +121,7 @@ window.__ARTISTS__ = [
     id: "a02",
     name:   "Leo Jimenez",
     genre:  "Banda",
-    photo:  "assets/covers/Captura.JPG",
+    photo:  "assets/covers/Leo jimenez.JPG",
     colorA: "#d08e30", colorB: "#e8520f"
   },
 
@@ -129,7 +129,7 @@ window.__ARTISTS__ = [
     id: "a03",
     name:   "Danny Jimenez",
     genre:  "Sonidero",
-    photo:  "assets/covers/WhatsApp Image 2026-04-28 at 2.53.18 PM.jpeg",
+    photo:  "assets/covers/danny jimenez.JPG",
     colorA: "#8e2d9a", colorB: "#2c56c0"
   },
 
@@ -137,7 +137,7 @@ window.__ARTISTS__ = [
     id: "a04",
     name:   "Deylis Enrique Córdoba",
     genre:  "Cumbia",
-    photo:  "assets/covers/Captura.JPG",
+    photo:  "assets/covers/deylis enrrique.JPG",
     colorA: "#c8341a", colorB: "#8e2d9a"
   },
 
@@ -145,7 +145,7 @@ window.__ARTISTS__ = [
     id: "a05",
     name:   "Los Compitas del ritmo",
     genre:  "Norteño",
-    photo:  "assets/covers/499194521_704570635295790_5993493926384281360_n.jpg",
+    photo:  "",
     colorA: "#2c56c0", colorB: "#d08e30"
   },
 
@@ -153,7 +153,7 @@ window.__ARTISTS__ = [
     id: "a06",
     name:   "Jungle Tico",
     genre:  "Reggae Dancehall",
-    photo:  "assets/covers/499194521_704570635295790_5993493926384281360_n.jpg",
+    photo:  "assets/covers/Jungle tico.jpg",
     colorA: "#e8520f", colorB: "#d08e30"
   },
 
