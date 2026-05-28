@@ -717,12 +717,13 @@
 
   /* ──────────────────────────────────────────────────────────────
      REFRESH MAIN SITE TRACK LIST
+     Async: carga las carátulas desde IndexedDB como blob URLs
+     para que las imágenes subidas desde el panel se muestren.
   ────────────────────────────────────────────────────────────── */
-  function refreshSite(newId, newTrack) {
+  async function refreshSite() {
     const list = document.getElementById('trackList');
     if (!list) return;
 
-    // Re-render using SVG cover generator from main.js
     const makeCov = window.__makeCover || function(a,b,lbl) {
       const id2 = 'g'+Math.random().toString(36).slice(2);
       const ini = (lbl||'TR').split(/\s/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
@@ -734,9 +735,26 @@
       </svg>`;
     };
 
+    // Revocar blob URLs anteriores para no acumular memoria
+    if (refreshSite._urls) refreshSite._urls.forEach(u => URL.revokeObjectURL(u));
+    refreshSite._urls = [];
+
+    // Cargar carátulas desde IndexedDB en paralelo
+    const covMap = {};
+    await Promise.all(cat.tracks.map(async t => {
+      const blob = await dbGet('covers', t.id).catch(() => null);
+      if (blob) {
+        const u = URL.createObjectURL(blob);
+        covMap[t.id] = u;
+        refreshSite._urls.push(u);
+      }
+    }));
+
     list.innerHTML = cat.tracks.map((t,i) => {
-      const cov = t.cover
-        ? `<img src="${t.cover}" alt="${t.title}" loading="lazy" onerror="this.outerHTML='${makeCov(t.colorA||'#e8520f',t.colorB||'#d08e30',t.title).replace(/'/g,"&#39;")}'"/>`
+      // Prioridad: blob de IndexedDB → ruta en data.js → SVG placeholder
+      const covSrc = covMap[t.id] || t.cover || '';
+      const cov = covSrc
+        ? `<img src="${covSrc}" alt="${t.title}" loading="lazy" onerror="this.style.display='none';this.parentNode.insertAdjacentHTML('beforeend','${makeCov(t.colorA||'#e8520f',t.colorB||'#d08e30',t.title).replace(/\\/g,'\\\\').replace(/'/g,"&#39;").replace(/\n/g,' ')}')"/>`
         : makeCov(t.colorA||'#e8520f', t.colorB||'#d08e30', t.title);
       return `<div class="track" data-id="${t.id}" tabindex="0">
         <div class="track-num"><span>${i+1}</span><span class="track-play">▶</span></div>
@@ -761,24 +779,37 @@
   }
 
   /* ──────────────────────────────────────────────────────────────
-     PLAY WITH INDEXEDDB FALLBACK
+     PLAY CON FALLBACK A INDEXEDDB
+     Carga audio y carátula desde IndexedDB si están disponibles.
   ────────────────────────────────────────────────────────────── */
   async function playSong(id) {
     if (!window.playTrack) return;
-    // Check IndexedDB first
-    const blob = await dbGet('audio', id).catch(()=>null);
-    if (blob) {
-      const url  = URL.createObjectURL(blob);
-      const t    = cat.tracks.find(t => t.id === id);
-      if (t) {
-        const orig = t.audio;
-        t.audio    = url;
-        window.playTrack(id);
-        setTimeout(() => { t.audio = orig; URL.revokeObjectURL(url); }, 500);
-        return;
-      }
-    }
+    const t = cat.tracks.find(t => t.id === id);
+    if (!t) { window.playTrack(id); return; }
+
+    // Cargar audio y carátula desde IndexedDB en paralelo
+    const [audioBlob, coverBlob] = await Promise.all([
+      dbGet('audio',  id).catch(() => null),
+      dbGet('covers', id).catch(() => null),
+    ]);
+
+    const origAudio = t.audio;
+    const origCover = t.cover;
+    let audioUrl, coverUrl;
+
+    if (audioBlob) { audioUrl = URL.createObjectURL(audioBlob); t.audio = audioUrl; }
+    if (coverBlob) { coverUrl = URL.createObjectURL(coverBlob); t.cover = coverUrl; }
+
     window.playTrack(id);
+
+    // Restaurar rutas originales y revocar URLs temporales
+    // (el elemento <audio> ya bufferizó, la carátula ya se mostró)
+    setTimeout(() => {
+      t.audio = origAudio;
+      t.cover = origCover;
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      if (coverUrl) URL.revokeObjectURL(coverUrl);
+    }, 3000);
   }
 
   /* ──────────────────────────────────────────────────────────────
