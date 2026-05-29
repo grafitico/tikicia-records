@@ -68,6 +68,35 @@
     onScroll();
   });
 
+  // ─── HAMBURGER MENU ──────────────────────────────────────────────────
+  safe('hamburger', function () {
+    const btn    = document.getElementById('navHamburger');
+    const mobile = document.getElementById('navMobile');
+    if (!btn || !mobile) return;
+
+    const close = () => {
+      mobile.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      mobile.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    btn.addEventListener('click', () => {
+      const opening = !mobile.classList.contains('open');
+      if (opening) {
+        mobile.classList.add('open');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        mobile.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      } else {
+        close();
+      }
+    });
+    mobile.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  });
+
   // ─── INTERSECTION OBSERVER (reveal) ──────────────────────────────────
   safe('io-reveal', function () {
     const items = $$('.io-reveal');
@@ -372,7 +401,10 @@
     // Like
     if (like) like.addEventListener('click', () => {
       like.classList.toggle('liked');
-      like.textContent = like.classList.contains('liked') ? '♥' : '♡';
+      const off = like.querySelector('.heart-off');
+      const on  = like.querySelector('.heart-on');
+      if (off) off.style.display = like.classList.contains('liked') ? 'none' : '';
+      if (on)  on.style.display  = like.classList.contains('liked') ? ''     : 'none';
     });
 
     // Volume
