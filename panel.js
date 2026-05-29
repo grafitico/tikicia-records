@@ -612,7 +612,7 @@
     pAudioFile = file;
     if (pAudioUrl) URL.revokeObjectURL(pAudioUrl);
     pAudioUrl = URL.createObjectURL(file);
-    const path = 'assets/audio/' + file.name;
+    const path = 'audio/' + file.name;
     const fpi=$('f-audio-path'); if(fpi) fpi.value=path;
     const drop=$('adm-drop');    if(drop){drop.classList.add('done');drop.classList.remove('over');}
     const fn=$('adm-fn');        if(fn)  fn.textContent='✓ '+file.name;
@@ -686,6 +686,18 @@
     };
     if(pAudioFile) await dbPut('audio',  id, pAudioFile).catch(console.warn);
     if(pCoverFile) await dbPut('covers', id, pCoverFile).catch(console.warn);
+    // Subir archivos a GitHub para que se reproduzcan en todos los dispositivos
+    if (ghCfg().token) {
+      if (pAudioFile) {
+        toast('inf', `Subiendo MP3 a GitHub (${(pAudioFile.size/1024/1024).toFixed(1)} MB)…`);
+        const p = await pushFileToGitHub('audio/' + pAudioFile.name, pAudioFile);
+        if (p) { track.audio = p; } else { toast('err', 'Error al subir MP3 — quedó guardado localmente'); await new Promise(r=>setTimeout(r,1500)); }
+      }
+      if (pCoverFile) {
+        const p = await pushFileToGitHub('assets/covers/' + pCoverFile.name, pCoverFile);
+        if (p) track.cover = p;
+      }
+    }
     if(editing){ const i=cat.tracks.findIndex(t=>t.id===editing.id); if(i>-1) cat.tracks[i]=track; else cat.tracks.push(track); }
     else cat.tracks.push(track);
     saveCat(); closeForm(); renderTracks(); refreshSite();
@@ -707,6 +719,10 @@
       colorB: editing?.colorB||randomColor(name+'2'),
     };
     if(pCoverFile) await dbPut('covers','a_'+id, pCoverFile).catch(console.warn);
+    if (pCoverFile && ghCfg().token) {
+      const p = await pushFileToGitHub('assets/covers/' + pCoverFile.name, pCoverFile);
+      if (p) artist.photo = p;
+    }
     if(editing){ const i=cat.artists.findIndex(a=>a.id===editing.id); if(i>-1) cat.artists[i]=artist; else cat.artists.push(artist); }
     else cat.artists.push(artist);
     saveCat(); closeForm(); renderArtists(); refreshSite();
@@ -731,6 +747,10 @@
       colorB: editing?.colorB||randomColor(title),
     };
     if(pCoverFile) await dbPut('covers','r_'+id, pCoverFile).catch(console.warn);
+    if (pCoverFile && ghCfg().token) {
+      const p = await pushFileToGitHub('assets/covers/' + pCoverFile.name, pCoverFile);
+      if (p) release.cover = p;
+    }
     if(editing){ const i=cat.releases.findIndex(r=>r.id===editing.id); if(i>-1) cat.releases[i]=release; else cat.releases.push(release); }
     else cat.releases.push(release);
     saveCat(); closeForm(); renderReleases(); refreshSite();
@@ -895,6 +915,32 @@ window.__RELEASES__ = ${JSON.stringify(cat.releases,null,2)};
   ────────────────────────────────────────────────────────────── */
   function ghCfg()      { try { return JSON.parse(localStorage.getItem(GH_KEY)||'{}'); } catch(e) { return {}; } }
   function saveGhCfg(c) { localStorage.setItem(GH_KEY, JSON.stringify(c)); }
+
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function pushFileToGitHub(ghPath, blob) {
+    const c = ghCfg();
+    if (!c.token || !c.owner || !c.repo) return null;
+    try {
+      const encoded = await blobToBase64(blob);
+      const api  = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${ghPath}`;
+      const hdrs = { 'Authorization':'token '+c.token, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json' };
+      const getRes = await fetch(api, { headers: hdrs });
+      const sha    = getRes.ok ? (await getRes.json()).sha : null;
+      const body   = { message:'Subir: '+ghPath.split('/').pop(), content: encoded, branch: c.branch||'main' };
+      if (sha) body.sha = sha;
+      const putRes = await fetch(api, { method:'PUT', headers:hdrs, body:JSON.stringify(body) });
+      if (!putRes.ok) { console.warn('[TIKICIA] file push failed', putRes.status); return null; }
+      return ghPath;
+    } catch(e) { console.warn('[TIKICIA] file push:', e); return null; }
+  }
 
   function renderGhSettings() {
     const c = ghCfg();
