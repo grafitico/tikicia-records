@@ -124,17 +124,6 @@ window.__RELEASES__ = [
     "cover": "",
     "colorA": "#c8341a",
     "colorB": "#e8520f"
-  },
-  {
-    "id": "r06",
-    "title": "Jungle Mix",
-    "artist": "Jungle Tico",
-    "type": "Single",
-    "year": 2026,
-    "large": false,
-    "cover": "",
-    "colorA": "#e8520f",
-    "colorB": "#d08e30"
   }
 ];
 
