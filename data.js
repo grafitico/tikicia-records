@@ -84,6 +84,18 @@ window.__ARTISTS__  = [
   }
 ];
 
-window.__RELEASES__ = [];
+window.__RELEASES__ = [
+  {
+    "id": "r1780352291526",
+    "title": "El Viejon",
+    "artist": "Los Compitas del ritmo",
+    "type": "Single",
+    "year": 2026,
+    "large": true,
+    "cover": "assets/covers/ChatGPT Image 26 may 2026, 06_12_05.png",
+    "colorA": "#d08e30",
+    "colorB": "#8e2d9a"
+  }
+];
 
 })();
