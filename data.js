@@ -126,17 +126,6 @@ window.__RELEASES__ = [
     "colorB": "#e8520f"
   },
   {
-    "id": "r03",
-    "title": "Sencillo",
-    "artist": "Danny Jimenez",
-    "type": "Single",
-    "year": 2025,
-    "large": false,
-    "cover": "",
-    "colorA": "#8e2d9a",
-    "colorB": "#2c56c0"
-  },
-  {
     "id": "r04",
     "title": "Cumbia Pa' Bailar",
     "artist": "Deylis Enrique Córdoba",
