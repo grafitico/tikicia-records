@@ -194,17 +194,6 @@ window.__RELEASES__ = [
     "colorB": "#e8520f"
   },
   {
-    "id": "r04",
-    "title": "Mar Adentro",
-    "artist": "Manuel del Mar",
-    "type": "Álbum",
-    "year": 2025,
-    "large": true,
-    "cover": "",
-    "colorA": "#2c56c0",
-    "colorB": "#d08e30"
-  },
-  {
     "id": "r05",
     "title": "Caliente",
     "artist": "Kombo Caliente",
