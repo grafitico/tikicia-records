@@ -113,18 +113,6 @@ window.__ARTISTS__  = [
   }
 ];
 
-window.__RELEASES__ = [
-  {
-    "id": "r01",
-    "title": "El Viejón",
-    "artist": "Jaxdane Flores",
-    "type": "Single",
-    "year": 2025,
-    "large": true,
-    "cover": "",
-    "colorA": "#c8341a",
-    "colorB": "#e8520f"
-  }
-];
+window.__RELEASES__ = [];
 
 })();
