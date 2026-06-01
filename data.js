@@ -125,17 +125,6 @@ window.__RELEASES__ = [
     "colorB": "#8e2d9a"
   },
   {
-    "id": "r02",
-    "title": "Sonidero Vol.1",
-    "artist": "Los compitas del Ritmo",
-    "type": "Álbum",
-    "year": 2026,
-    "large": false,
-    "cover": "assets/covers/tikicia records.png",
-    "colorA": "#8e2d9a",
-    "colorB": "#2c56c0"
-  },
-  {
     "id": "r03",
     "title": "Cumbia con sentimiento",
     "artist": "Deylis Enrique Cordoba",
