@@ -65,6 +65,14 @@ window.__ARTISTS__  = [
     "photo": "assets/covers/Jungle tico.jpg",
     "colorA": "#e8520f",
     "colorB": "#d08e30"
+  },
+  {
+    "id": "a1780352426356",
+    "name": "Los Compitas del ritmo",
+    "genre": "Norteña",
+    "photo": "assets/covers/ChatGPT Image 28 may 2026, 23_45_50.png",
+    "colorA": "#d08e30",
+    "colorB": "#d08e30"
   }
 ];
 
