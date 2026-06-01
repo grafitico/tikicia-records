@@ -39,17 +39,6 @@ window.__TRACKS__   = [
     "colorB": "#e8520f"
   },
   {
-    "id": "t04",
-    "title": "Sonidero Mix",
-    "artist": "DJ Fiesta",
-    "album": "Sonidero Vol. 1",
-    "duration": "5:08",
-    "audio": "",
-    "cover": "",
-    "colorA": "#8e2d9a",
-    "colorB": "#2c56c0"
-  },
-  {
     "id": "t05",
     "title": "Brisas del Pacífico",
     "artist": "Manuel del Mar",
