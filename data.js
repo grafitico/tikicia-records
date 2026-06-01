@@ -1,5 +1,5 @@
 // TIKICIA RECORDS — Catálogo
-// Auto-generado: 1/6/2026 · Panel admin ⚙
+// Auto-generado: 2/6/2026 · Panel admin ⚙
 // Para editar: abrí el panel admin en el sitio
 
 (function () { "use strict";
@@ -26,17 +26,6 @@ window.__TRACKS__   = [
     "cover": "",
     "colorA": "#8e2d9a",
     "colorB": "#c8341a"
-  },
-  {
-    "id": "t03",
-    "title": "Cumbia del Sol",
-    "artist": "Tropikana Sound",
-    "album": "Tropikana",
-    "duration": "4:15",
-    "audio": "",
-    "cover": "",
-    "colorA": "#d08e30",
-    "colorB": "#e8520f"
   }
 ];
 
