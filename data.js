@@ -126,17 +126,6 @@ window.__RELEASES__ = [
     "colorB": "#e8520f"
   },
   {
-    "id": "r05",
-    "title": "Sencillo",
-    "artist": "Los Compitas del ritmo",
-    "type": "Single",
-    "year": 2025,
-    "large": false,
-    "cover": "",
-    "colorA": "#2c56c0",
-    "colorB": "#d08e30"
-  },
-  {
     "id": "r06",
     "title": "Jungle Mix",
     "artist": "Jungle Tico",
