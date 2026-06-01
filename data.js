@@ -15,17 +15,6 @@ window.__TRACKS__   = [
     "cover": "",
     "colorA": "#c8341a",
     "colorB": "#d08e30"
-  },
-  {
-    "id": "t02",
-    "title": "La Fiesta No Para",
-    "artist": "Los Karkis",
-    "album": "Fiesta Brava",
-    "duration": "3:42",
-    "audio": "",
-    "cover": "",
-    "colorA": "#8e2d9a",
-    "colorB": "#c8341a"
   }
 ];
 
