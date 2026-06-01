@@ -60,24 +60,6 @@ window.__TRACKS__   = [
     "colorB": "#e8520f"
   },
   {
-    "id": "t04",
-    "title": "En Privado(COVER)",
-    "artist": "TIKICIA RECORDS",
-    "album": "Covers Colección 1",
-    "year": 2026,
-    "genre": "Banda",
-    "duration": "3:44",
-    "audio": "audio/En Privado - (BANDA).mp3",
-    "cover": "assets/covers/hf_20260420_195407_56a40b6e-65e1-4f7e-92c0-f5847a125e53.png",
-    "spotify": "",
-    "youtube": "",
-    "description": "",
-    "bpm": null,
-    "key": "",
-    "colorA": "#8e2d9a",
-    "colorB": "#2c56c0"
-  },
-  {
     "id": "t05",
     "title": "Brisas del Pacífico",
     "artist": "Manuel del Mar",
@@ -87,24 +69,6 @@ window.__TRACKS__   = [
     "cover": "",
     "colorA": "#2c56c0",
     "colorB": "#d08e30"
-  },
-  {
-    "id": "t04",
-    "title": "En Privado(COVER)",
-    "artist": "TIKICIA RECORDS",
-    "album": "Covers Colección 1",
-    "year": 2026,
-    "genre": "Banda",
-    "duration": "3:44",
-    "audio": "audio/En Privado - (BANDA).mp3",
-    "cover": "assets/covers/hf_20260420_195407_56a40b6e-65e1-4f7e-92c0-f5847a125e53.png",
-    "spotify": "",
-    "youtube": "",
-    "description": "",
-    "bpm": null,
-    "key": "",
-    "colorA": "#8e2d9a",
-    "colorB": "#2c56c0"
   }
 ];
 
