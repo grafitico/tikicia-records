@@ -58,17 +58,6 @@ window.__TRACKS__   = [
     "key": "",
     "colorA": "#d08e30",
     "colorB": "#e8520f"
-  },
-  {
-    "id": "t05",
-    "title": "Brisas del Pacífico",
-    "artist": "Manuel del Mar",
-    "album": "Mar Adentro",
-    "duration": "4:50",
-    "audio": "",
-    "cover": "",
-    "colorA": "#2c56c0",
-    "colorB": "#d08e30"
   }
 ];
 
