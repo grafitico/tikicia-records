@@ -10,9 +10,16 @@ window.__TRACKS__   = [
     "title": "El Viejón",
     "artist": "Jaxdane Flores",
     "album": "Sencillo",
+    "year": 2026,
+    "genre": "",
     "duration": "4:22",
     "audio": "audio/El viejon.mp3",
-    "cover": "",
+    "cover": "assets/covers/El viejon.png",
+    "spotify": "",
+    "youtube": "",
+    "description": "",
+    "bpm": null,
+    "key": "",
     "colorA": "#c8341a",
     "colorB": "#d08e30"
   }
