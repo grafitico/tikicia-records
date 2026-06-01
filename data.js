@@ -194,17 +194,6 @@ window.__RELEASES__ = [
     "colorB": "#e8520f"
   },
   {
-    "id": "r05",
-    "title": "Caliente",
-    "artist": "Kombo Caliente",
-    "type": "EP",
-    "year": 2025,
-    "large": false,
-    "cover": "",
-    "colorA": "#e8520f",
-    "colorB": "#d08e30"
-  },
-  {
     "id": "r06",
     "title": "Cumbia Pa' Bailar",
     "artist": "Deylis E.C",
