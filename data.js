@@ -126,17 +126,6 @@ window.__RELEASES__ = [
     "colorB": "#e8520f"
   },
   {
-    "id": "r04",
-    "title": "Cumbia Pa' Bailar",
-    "artist": "Deylis Enrique Córdoba",
-    "type": "Single",
-    "year": 2026,
-    "large": true,
-    "cover": "",
-    "colorA": "#c8341a",
-    "colorB": "#8e2d9a"
-  },
-  {
     "id": "r05",
     "title": "Sencillo",
     "artist": "Los Compitas del ritmo",
