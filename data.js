@@ -192,17 +192,6 @@ window.__RELEASES__ = [
     "cover": "assets/covers/hf_20260528_215304_ce1e78c1-d519-4469-90a1-e903612b8e28.png",
     "colorA": "#d08e30",
     "colorB": "#e8520f"
-  },
-  {
-    "id": "r06",
-    "title": "Cumbia Pa' Bailar",
-    "artist": "Deylis E.C",
-    "type": "Single",
-    "year": 2026,
-    "large": false,
-    "cover": "",
-    "colorA": "#c8341a",
-    "colorB": "#e8520f"
   }
 ];
 
