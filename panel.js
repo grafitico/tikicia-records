@@ -6,10 +6,12 @@
 (function () {
   'use strict';
 
-  const PASS    = 'tikicia2024';
+  // Usar contraseña desde config.js, fallback a default
+  const PASS    = (typeof TIKICIA_CONFIG !== 'undefined' ? TIKICIA_CONFIG.admin_password : 'tikicia2024');
   const LS_KEY  = 'tikicia_v2';
   const GH_KEY  = 'tikicia_gh';
   const DB_NAME = 'tikicia_media';
+  const CFG     = typeof TIKICIA_CONFIG !== 'undefined' ? TIKICIA_CONFIG : { max_audio_size_mb: 50, max_image_size_mb: 5, allowed_audio: ['.mp3', '.wav', '.ogg', '.m4a', '.flac'], allowed_image: ['.jpg', '.jpeg', '.png', '.webp', '.gif'] };
 
   /* ──────────────────────────────────────────────────────────────
      INDEXEDDB  (guarda MP3, fotos de artistas y portadas en el browser)
@@ -88,6 +90,35 @@
     const id  = 'g' + Math.random().toString(36).slice(2);
     const ini = (lbl||'TR').split(/[\s\-_]/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
     return `<svg viewBox="0 0 ${sz} ${sz}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${a}"/><stop offset="100%" stop-color="${b}"/></linearGradient></defs><rect width="${sz}" height="${sz}" fill="${a}22"/><rect width="${sz}" height="${sz}" fill="url(#${id})" opacity=".35"/><text x="${sz/2}" y="${sz*.62}" text-anchor="middle" font-family="serif" font-size="${sz*.36}" fill="${b}" opacity=".9" font-weight="300">${ini}</text></svg>`;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     VALIDACIONES DE ARCHIVO
+  ────────────────────────────────────────────────────────────── */
+  function validateAudioFile(file) {
+    if (!file) return { ok: false, msg: 'No se seleccionó archivo' };
+    const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+    if (!CFG.allowed_audio.includes(ext)) {
+      return { ok: false, msg: `Solo se aceptan: ${CFG.allowed_audio.join(', ')}` };
+    }
+    const sizeMB = file.size / 1024 / 1024;
+    if (sizeMB > CFG.max_audio_size_mb) {
+      return { ok: false, msg: `Máx ${CFG.max_audio_size_mb}MB (tu archivo: ${sizeMB.toFixed(1)}MB)` };
+    }
+    return { ok: true };
+  }
+
+  function validateImageFile(file) {
+    if (!file) return { ok: false, msg: 'No se seleccionó imagen' };
+    const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+    if (!CFG.allowed_image.includes(ext)) {
+      return { ok: false, msg: `Solo se aceptan: ${CFG.allowed_image.join(', ')}` };
+    }
+    const sizeMB = file.size / 1024 / 1024;
+    if (sizeMB > CFG.max_image_size_mb) {
+      return { ok: false, msg: `Máx ${CFG.max_image_size_mb}MB (tu archivo: ${sizeMB.toFixed(1)}MB)` };
+    }
+    return { ok: true };
   }
 
   /* ──────────────────────────────────────────────────────────────
@@ -516,8 +547,8 @@
   <audio id="adm-audio" controls src="${t?.audio||''}" style="width:100%;height:30px"></audio>
 </div>
 <div class="af-row">
-  <div class="af"><label>Título *</label><input id="f-title" value="${x(t?.title||'')}" placeholder="Nombre de la canción"></div>
-  <div class="af"><label>Artista *</label><input id="f-artist" value="${x(t?.artist||'')}" placeholder="Artista" list="adm-art-list"><datalist id="adm-art-list">${artOpts}</datalist></div>
+  <div class="af"><label>Título *</label><input id="f-title" value="${x(t?.title||'')}" placeholder="Nombre de la canción" maxlength="200" required><span class="af-hint">Máx 200 caracteres</span></div>
+  <div class="af"><label>Artista *</label><input id="f-artist" value="${x(t?.artist||'')}" placeholder="Artista" list="adm-art-list" maxlength="100" required><datalist id="adm-art-list">${artOpts}</datalist><span class="af-hint">Máx 100 caracteres</span></div>
 </div>
 <div class="af-row">
   <div class="af"><label>Álbum / Single</label><input id="f-album" value="${x(t?.album||'')}" placeholder="Nombre del álbum" list="adm-alb-list"><datalist id="adm-alb-list">${albOpts}</datalist></div>
@@ -556,7 +587,7 @@
     const gOpts  = genres.map(g=>`<option value="${g}"${a?.genre===g?' selected':''}>${g}</option>`).join('');
     $('adm-dbody').innerHTML = `
 <div class="af-row">
-  <div class="af"><label>Nombre artístico *</label><input id="f-art-name" value="${x(a?.name||'')}" placeholder="Nombre del artista"></div>
+  <div class="af"><label>Nombre artístico *</label><input id="f-art-name" value="${x(a?.name||'')}" placeholder="Nombre del artista" maxlength="100" required><span class="af-hint">Máx 100 caracteres</span></div>
   <div class="af"><label>Género musical</label><select id="f-art-genre"><option value="">— Elegir —</option>${gOpts}</select></div>
 </div>
 <div class="af"><label>Foto del artista</label>
@@ -581,8 +612,8 @@
     const artOpts= cat.artists.map(a=>`<option value="${x(a.name)}"${r?.artist===a.name?' selected':''}>${x(a.name)}</option>`).join('');
     $('adm-dbody').innerHTML = `
 <div class="af-row">
-  <div class="af"><label>Título del lanzamiento *</label><input id="f-rel-title" value="${x(r?.title||'')}" placeholder="Nombre del álbum o sencillo"></div>
-  <div class="af"><label>Artista *</label><input id="f-rel-artist" value="${x(r?.artist||'')}" list="adm-rel-art" placeholder="Artista"><datalist id="adm-rel-art">${artOpts}</datalist></div>
+  <div class="af"><label>Título del lanzamiento *</label><input id="f-rel-title" value="${x(r?.title||'')}" placeholder="Nombre del álbum o sencillo" maxlength="200" required><span class="af-hint">Máx 200 caracteres</span></div>
+  <div class="af"><label>Artista *</label><input id="f-rel-artist" value="${x(r?.artist||'')}" list="adm-rel-art" placeholder="Artista" required><datalist id="adm-rel-art">${artOpts}</datalist></div>
 </div>
 <div class="af-row">
   <div class="af"><label>Tipo</label><select id="f-rel-type"><option value="">— Elegir —</option>${tOpts}</select></div>
@@ -609,6 +640,8 @@
   ────────────────────────────────────────────────────────────── */
   function handleAudioFile(file) {
     if (!file) return;
+    const val = validateAudioFile(file);
+    if (!val.ok) { toast('err', 'MP3: ' + val.msg); return; }
     pAudioFile = file;
     if (pAudioUrl) URL.revokeObjectURL(pAudioUrl);
     pAudioUrl = URL.createObjectURL(file);
@@ -633,6 +666,8 @@
 
   function handleCoverFile(file) {
     if (!file) return;
+    const val = validateImageFile(file);
+    if (!val.ok) { toast('err', 'Imagen: ' + val.msg); return; }
     pCoverFile = file;
     if (pCoverUrl) URL.revokeObjectURL(pCoverUrl);
     pCoverUrl = URL.createObjectURL(file);
@@ -667,6 +702,8 @@
     const title=$('f-title')?.value.trim(), artist=$('f-artist')?.value.trim();
     if(!title)  { toast('err','El título es obligatorio'); return; }
     if(!artist) { toast('err','El artista es obligatorio'); return; }
+    if(title.length > 200) { toast('err','Título muy largo (máx 200 caracteres)'); return; }
+    if(artist.length > 100) { toast('err','Artista muy largo (máx 100 caracteres)'); return; }
     const id = editing?.id || 'tr'+Date.now();
     const track = {
       id, title, artist,
@@ -686,7 +723,7 @@
     };
     if(pAudioFile) await dbPut('audio',  id, pAudioFile).catch(console.warn);
     if(pCoverFile) await dbPut('covers', id, pCoverFile).catch(console.warn);
-    // Subir archivos a GitHub para que se reproduzcan en todos los dispositivos
+    // Subir archivos a GitHub automáticamente si está configurado
     if (ghCfg().token) {
       if (pAudioFile) {
         toast('inf', `Subiendo MP3 a GitHub (${(pAudioFile.size/1024/1024).toFixed(1)} MB)…`);
@@ -701,6 +738,10 @@
     if(editing){ const i=cat.tracks.findIndex(t=>t.id===editing.id); if(i>-1) cat.tracks[i]=track; else cat.tracks.push(track); }
     else cat.tracks.push(track);
     saveCat(); closeForm(); renderTracks(); refreshSite();
+    // Sync automático a GitHub si está configurado
+    if (ghCfg().token) {
+      await pushToGitHub();
+    }
     toast('ok',`"${title}" guardada ✓`);
   }
 
@@ -710,6 +751,7 @@
   async function saveArtist() {
     const name=$('f-art-name')?.value.trim();
     if(!name){ toast('err','El nombre es obligatorio'); return; }
+    if(name.length > 100) { toast('err','Nombre muy largo (máx 100 caracteres)'); return; }
     const id = editing?.id || 'a'+Date.now();
     const artist = {
       id, name,
@@ -726,6 +768,10 @@
     if(editing){ const i=cat.artists.findIndex(a=>a.id===editing.id); if(i>-1) cat.artists[i]=artist; else cat.artists.push(artist); }
     else cat.artists.push(artist);
     saveCat(); closeForm(); renderArtists(); refreshSite();
+    // Sync automático a GitHub si está configurado
+    if (ghCfg().token) {
+      await pushToGitHub();
+    }
     toast('ok',`"${name}" guardado ✓`);
   }
 
@@ -736,6 +782,7 @@
     const title=$('f-rel-title')?.value.trim(), artist=$('f-rel-artist')?.value.trim();
     if(!title)  { toast('err','El título es obligatorio'); return; }
     if(!artist) { toast('err','El artista es obligatorio'); return; }
+    if(title.length > 200) { toast('err','Título muy largo (máx 200 caracteres)'); return; }
     const id = editing?.id || 'r'+Date.now();
     const release = {
       id, title, artist,
@@ -754,6 +801,10 @@
     if(editing){ const i=cat.releases.findIndex(r=>r.id===editing.id); if(i>-1) cat.releases[i]=release; else cat.releases.push(release); }
     else cat.releases.push(release);
     saveCat(); closeForm(); renderReleases(); refreshSite();
+    // Sync automático a GitHub si está configurado
+    if (ghCfg().token) {
+      await pushToGitHub();
+    }
     toast('ok',`"${title}" guardado ✓`);
   }
 
@@ -911,10 +962,22 @@ window.__RELEASES__ = ${JSON.stringify(cat.releases,null,2)};
   function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   /* ──────────────────────────────────────────────────────────────
-     GITHUB SYNC
+     GITHUB SYNC (usando sessionStorage para token = más seguro)
   ────────────────────────────────────────────────────────────── */
-  function ghCfg()      { try { return JSON.parse(localStorage.getItem(GH_KEY)||'{}'); } catch(e) { return {}; } }
-  function saveGhCfg(c) { localStorage.setItem(GH_KEY, JSON.stringify(c)); }
+  function ghCfg() {
+    try {
+      const sess = JSON.parse(sessionStorage.getItem(GH_KEY)||'{}');
+      const stored = JSON.parse(localStorage.getItem(GH_KEY)||'{}');
+      return { ...stored, ...sess };
+    } catch(e) { return {}; }
+  }
+  function saveGhCfg(c) {
+    // Token va en sessionStorage (más seguro), el resto en localStorage
+    if (c.token) {
+      sessionStorage.setItem(GH_KEY, JSON.stringify({ token: c.token }));
+    }
+    localStorage.setItem(GH_KEY, JSON.stringify({ owner: c.owner, repo: c.repo, branch: c.branch || 'main' }));
+  }
 
   function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
