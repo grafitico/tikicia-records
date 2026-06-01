@@ -98,8 +98,8 @@ window.__ARTISTS__  = [
   {
     "id": "a05",
     "name": "Los Compitas del ritmo",
-    "genre": "Norteño",
-    "photo": "",
+    "genre": "Norteña",
+    "photo": "assets/covers/ChatGPT Image 28 may 2026, 23_45_50.png",
     "colorA": "#2c56c0",
     "colorB": "#d08e30"
   },
