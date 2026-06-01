@@ -148,7 +148,7 @@ window.__RELEASES__ = [
   },
   {
     "id": "r02",
-    "title": "Sonidero Vol. 1",
+    "title": "Sonidero Vol.1",
     "artist": "Los compitas del Ritmo",
     "type": "Álbum",
     "year": 2026,
