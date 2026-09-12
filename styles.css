@@ -829,6 +829,249 @@ strong { font-weight: 600; color: var(--ink); }
   .service-card { padding: 1.8rem 1.2rem; }
 }
 
+/* =================== PLANES =================== */
+.plans::before { display: none; }
+.plans {
+  border-top: 1px solid var(--rule);
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.plan-card {
+  border: 1px solid var(--rule-2);
+  padding: 2.5rem;
+  background: var(--bg-card);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-out);
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--brand-gradient);
+  transform: scaleX(0);
+  transition: transform 0.4s var(--ease-out);
+  transform-origin: left;
+}
+
+.plan-card:hover {
+  background: var(--bg-raised);
+  border-color: var(--rule-3);
+  transform: translateY(-4px);
+}
+
+.plan-card:hover::before {
+  transform: scaleX(1);
+}
+
+.plan-card--featured {
+  background: linear-gradient(135deg, var(--bg-raised) 0%, var(--bg-card) 100%);
+  border-color: var(--rule-3);
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+.plan-card--featured::before {
+  transform: scaleX(1);
+}
+
+.plan-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+}
+
+.plan-header {
+  margin-bottom: 2rem;
+}
+
+.plan-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  font-variation-settings: "opsz" 48, "SOFT" 0;
+  letter-spacing: 0.02em;
+}
+
+.plan-profile {
+  font-size: 0.9rem;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.plan-price {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--rule);
+  padding: 1.8rem 0;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.price-tag {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+  font-variation-settings: "opsz" 32, "SOFT" 0;
+}
+
+.price-desc {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.plan-rights,
+.plan-features,
+.plan-terms {
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.plan-rights h4,
+.plan-features h4,
+.plan-terms h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1rem;
+  font-variation-settings: "opsz" 32, "SOFT" 0;
+}
+
+.plan-rights ul,
+.plan-features ul,
+.plan-terms ul {
+  list-style: none;
+}
+
+.plan-rights li,
+.plan-features li,
+.plan-terms li {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  padding: 0.4rem 0;
+  line-height: 1.5;
+}
+
+.plan-rights li strong {
+  color: var(--ink);
+}
+
+.rights-note {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  font-style: italic;
+  margin-top: 0.8rem;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--accent-muted);
+  border: 1px solid var(--rule-3);
+  color: var(--accent);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 2px;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.btn-plan {
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.plans-footer {
+  text-align: center;
+  padding: 2.5rem;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+
+.plans-note {
+  font-size: 0.95rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.plans-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  transition: color 0.3s var(--ease-out);
+}
+
+.plans-note a:hover {
+  color: var(--accent-warm);
+}
+
+@media (max-width: 960px) {
+  .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .plan-card--featured {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .plan-card {
+    padding: 1.8rem;
+  }
+
+  .plan-card--featured {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .plan-name {
+    font-size: 1.2rem;
+  }
+
+  .plans-footer {
+    padding: 1.8rem;
+  }
+}
+
 /* =================== TRACK LIST =================== */
 .track-list {
   display: flex;
