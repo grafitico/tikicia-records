@@ -2084,3 +2084,125 @@ body.no-player { padding-bottom: 0; }
   .plan-doc-header { padding: 1.5rem; }
   .legal-cta { padding: 2rem 1.2rem; }
 }
+
+/* ── Bloque de firma digital ── */
+.sign-block {
+  margin-top: 2.5rem;
+  padding: 2rem 2.2rem;
+  background: var(--bg-2);
+  border: 1px solid var(--rule-2);
+  border-left: 3px solid var(--accent-warm);
+}
+.sign-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  font-variation-settings: "opsz" 72, "SOFT" 10;
+}
+.sign-sub {
+  font-size: 0.88rem;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  max-width: 560px;
+  line-height: 1.6;
+}
+.sign-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.sign-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+.sign-form input[type="text"],
+.sign-form input[type="email"],
+.sign-form input[type="tel"] {
+  background: var(--bg-card);
+  border: 1px solid var(--rule-2);
+  color: var(--ink);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  border-radius: 2px;
+  transition: border-color 0.3s;
+}
+.sign-form input:focus {
+  outline: none;
+  border-color: var(--accent-warm);
+}
+.sign-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-bottom: 1.6rem;
+  cursor: pointer;
+}
+.sign-check input {
+  margin-top: 0.2rem;
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.sign-pad-wrap { margin-bottom: 1.6rem; }
+.sign-pad-label {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  margin-bottom: 0.6rem;
+}
+.sign-canvas {
+  width: 100%;
+  height: 160px;
+  background: var(--bg-card);
+  border: 1px dashed var(--rule-3);
+  border-radius: 2px;
+  touch-action: none;
+  cursor: crosshair;
+  display: block;
+}
+.sign-clear {
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule-2);
+  padding: 0.4rem 0.9rem;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.sign-clear:hover { color: var(--ink); border-color: var(--rule-3); }
+.sign-submit { width: 100%; }
+.sign-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+.sign-error {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--accent-2);
+}
+.sign-success {
+  margin-top: 1.4rem;
+  padding: 1.2rem 1.4rem;
+  background: rgba(37,211,102,0.08);
+  border: 1px solid rgba(37,211,102,0.3);
+  border-radius: 2px;
+}
+.sign-success p {
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 640px) {
+  .sign-block { padding: 1.5rem; }
+  .sign-row { grid-template-columns: 1fr; gap: 0.9rem; }
+}
