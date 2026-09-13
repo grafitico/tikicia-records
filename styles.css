@@ -2206,3 +2206,49 @@ body.no-player { padding-bottom: 0; }
   .sign-block { padding: 1.5rem; }
   .sign-row { grid-template-columns: 1fr; gap: 0.9rem; }
 }
+
+/* =====================================================================
+   ALIANZA CON SITARG
+   ===================================================================== */
+.sitarg-band-inner {
+  max-width: 780px;
+  padding: 3rem clamp(1.6rem, 5vw, 3.5rem);
+  background: linear-gradient(135deg, rgba(142,45,154,0.12) 0%, rgba(184,214,58,0.08) 100%);
+  border: 1px solid var(--rule-2);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.sitarg-band-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8e2d9a 0%, #b8d63a 100%);
+}
+.sitarg-band-copy {
+  font-size: 0.97rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  max-width: 640px;
+  margin-bottom: 1.6rem;
+}
+.sitarg-band-copy em {
+  font-style: italic;
+  color: var(--ink);
+}
+.sitarg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.8rem;
+}
+.sitarg-chip {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+  background: var(--bg-2);
+  border: 1px solid var(--rule-2);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+}
