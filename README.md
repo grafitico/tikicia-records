@@ -13,6 +13,7 @@ Sitio estilo Spotify para la disquera. HTML/CSS/JS puro: ningún servidor, ningu
    - `styles.css`
    - `main.js`
    - `data.js`
+   - `content.js`
    - `.htaccess` (importante para el caché)
    - Carpeta `assets/`
 4. Listo. Tu sitio está online.
@@ -79,7 +80,9 @@ Abrí `styles.css` y editá las variables CSS al inicio del archivo:
 ```
 
 ### Cambiar nombre / textos
-Editá directamente `index.html`. Los textos están en español y se ven a simple vista.
+Lo más fácil: abrí el panel admin (⚙, esquina inferior derecha) → Tab **📝 Textos**. Ahí editás los títulos y textos principales sin tocar código, y el estilo/tipografía se mantiene siempre igual.
+
+También podés editar directamente `index.html` si preferís — los textos están en español y se ven a simple vista.
 
 ### Cambiar fotos de artistas
 1. Pone la foto en `assets/img/nombre-artista.jpg`
@@ -138,6 +141,7 @@ tikicia/
 ├── styles.css              ← Todos los estilos
 ├── main.js                 ← Lógica + reproductor
 ├── data.js                 ← TUS canciones, artistas, álbumes ← EDITAR AQUÍ
+├── content.js              ← Textos del sitio (editar desde el panel admin)
 ├── .htaccess               ← Config de caché (Apache/Hostinger)
 ├── README.md               ← Este archivo
 └── assets/

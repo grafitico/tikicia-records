@@ -72,6 +72,139 @@
   function applyToGlobal() { window.__TRACKS__=cat.tracks; window.__ARTISTS__=cat.artists; window.__RELEASES__=cat.releases; }
 
   /* ──────────────────────────────────────────────────────────────
+     TEXTOS DEL SITIO  (content.js — editable desde pestaña Textos)
+  ────────────────────────────────────────────────────────────── */
+  const CT_KEY = 'tikicia_content';
+  let content = {};
+
+  function loadContent() {
+    try {
+      const s = localStorage.getItem(CT_KEY);
+      content = s ? JSON.parse(s) : { ...(window.__CONTENT__ || {}) };
+    } catch(e) { content = { ...(window.__CONTENT__ || {}) }; }
+    window.__CONTENT__ = content;
+    if (typeof window.__applyContent === 'function') window.__applyContent();
+  }
+  function saveContentValues(values) {
+    content = { ...content, ...values };
+    localStorage.setItem(CT_KEY, JSON.stringify(content));
+    window.__CONTENT__ = content;
+    if (typeof window.__applyContent === 'function') window.__applyContent();
+    pushContentToGitHub();
+  }
+
+  // Agrupación de campos editables, en el mismo orden en que aparecen en el sitio
+  const CONTENT_FIELDS = [
+    { title: 'Portada (Hero)', fields: [
+      { key: 'hero.kicker',       label: 'Línea superior' },
+      { key: 'hero.title1',       label: 'Título · línea 1' },
+      { key: 'hero.title2',       label: 'Título · línea 2' },
+      { key: 'hero.title3',       label: 'Título · línea 3', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'hero.sub',          label: 'Texto debajo del título', multiline: true },
+      { key: 'hero.ctaPrimary',   label: 'Botón principal' },
+      { key: 'hero.ctaSecondary', label: 'Botón secundario' },
+    ]},
+    { title: 'Servicios', fields: [
+      { key: 'services.kicker', label: 'Etiqueta de sección' },
+      { key: 'services.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'services.sub',    label: 'Texto de sección', multiline: true },
+      { key: 'services.card1.title', label: 'Tarjeta 1 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card1.desc',  label: 'Tarjeta 1 — descripción', multiline: true },
+      { key: 'services.card2.title', label: 'Tarjeta 2 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card2.desc',  label: 'Tarjeta 2 — descripción', multiline: true },
+      { key: 'services.card3.title', label: 'Tarjeta 3 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card3.desc',  label: 'Tarjeta 3 — descripción', multiline: true },
+      { key: 'services.card4.title', label: 'Tarjeta 4 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card4.desc',  label: 'Tarjeta 4 — descripción', multiline: true },
+      { key: 'services.card5.title', label: 'Tarjeta 5 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card5.desc',  label: 'Tarjeta 5 — descripción', multiline: true },
+      { key: 'services.card6.title', label: 'Tarjeta 6 — título', hint: 'Podés usar &lt;br&gt; para salto de línea' },
+      { key: 'services.card6.desc',  label: 'Tarjeta 6 — descripción', multiline: true },
+      { key: 'services.ctaHeadline', label: 'Banner CTA — frase' },
+      { key: 'services.ctaSub',      label: 'Banner CTA — subtítulo' },
+    ]},
+    { title: 'Alianza Sitarg.stream', fields: [
+      { key: 'sitarg.kicker', label: 'Etiqueta de sección' },
+      { key: 'sitarg.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'sitarg.copy',   label: 'Texto', multiline: true },
+    ]},
+    { title: 'Planes de colaboración', fields: [
+      { key: 'plans.kicker', label: 'Etiqueta de sección' },
+      { key: 'plans.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'plans.sub',    label: 'Texto de sección', multiline: true },
+    ]},
+    { title: 'Catálogo', fields: [
+      { key: 'catalog.kicker', label: 'Etiqueta de sección' },
+      { key: 'catalog.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'catalog.sub',    label: 'Texto de sección' },
+    ]},
+    { title: 'Artistas', fields: [
+      { key: 'artists.kicker', label: 'Etiqueta de sección' },
+      { key: 'artists.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'artists.sub',    label: 'Texto de sección' },
+    ]},
+    { title: 'Lanzamientos', fields: [
+      { key: 'releases.kicker', label: 'Etiqueta de sección' },
+      { key: 'releases.title',  label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'releases.sub',    label: 'Texto de sección' },
+    ]},
+    { title: 'Manifiesto (Quiénes somos)', fields: [
+      { key: 'manifesto.kicker', label: 'Etiqueta de sección' },
+      { key: 'manifesto.text',   label: 'Frase principal', multiline: true, hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'manifesto.item1.title', label: 'Punto 01 — título' },
+      { key: 'manifesto.item1.desc',  label: 'Punto 01 — descripción', multiline: true },
+      { key: 'manifesto.item2.title', label: 'Punto 02 — título' },
+      { key: 'manifesto.item2.desc',  label: 'Punto 02 — descripción', multiline: true },
+      { key: 'manifesto.item3.title', label: 'Punto 03 — título' },
+      { key: 'manifesto.item3.desc',  label: 'Punto 03 — descripción', multiline: true },
+      { key: 'manifesto.item4.title', label: 'Punto 04 — título' },
+      { key: 'manifesto.item4.desc',  label: 'Punto 04 — descripción', multiline: true },
+    ]},
+    { title: 'Contacto', fields: [
+      { key: 'contact.kicker',     label: 'Etiqueta de sección' },
+      { key: 'contact.title',      label: 'Título de sección', hint: 'Podés usar &lt;em&gt;texto&lt;/em&gt; para cursiva de acento' },
+      { key: 'contact.sub',        label: 'Texto de sección' },
+      { key: 'contact.waAction',   label: 'Botón WhatsApp — texto' },
+      { key: 'contact.waNumber',   label: 'Botón WhatsApp — número' },
+      { key: 'contact.formSubmit', label: 'Botón de enviar formulario' },
+    ]},
+    { title: 'Pie de página', fields: [
+      { key: 'footer.slogan',   label: 'Eslogan' },
+      { key: 'footer.location', label: 'Ubicación' },
+      { key: 'footer.copy',     label: 'Línea de copyright' },
+      { key: 'footer.legacy',   label: 'Frase final' },
+    ]},
+  ];
+
+  function renderContentForm() {
+    const wrap = $('adm-content-form');
+    if (!wrap) return;
+    wrap.innerHTML = CONTENT_FIELDS.map(group => `
+      <div class="ct-group">
+        <div class="ct-group-title">${x(group.title)}</div>
+        ${group.fields.map(f => `
+          <div class="af">
+            <label>${x(f.label)}</label>
+            ${f.multiline
+              ? `<textarea data-key="${x(f.key)}" rows="3">${x(content[f.key] ?? '')}</textarea>`
+              : `<input type="text" data-key="${x(f.key)}" value="${x(content[f.key] ?? '')}">`}
+            ${f.hint ? `<span class="af-hint">${f.hint}</span>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  function saveContentForm() {
+    const wrap = $('adm-content-form');
+    if (!wrap) return;
+    const values = {};
+    wrap.querySelectorAll('[data-key]').forEach(el => { values[el.dataset.key] = el.value; });
+    saveContentValues(values);
+    toast('ok', 'Textos guardados ✓ · Se aplicaron al sitio al instante');
+  }
+
+  /* ──────────────────────────────────────────────────────────────
      ESTADO
   ────────────────────────────────────────────────────────────── */
   let currentTab  = 'tracks';
@@ -210,6 +343,9 @@
 .af-check input[type=checkbox]{width:16px;height:16px;accent-color:#e8520f;cursor:pointer;flex-shrink:0;}
 .af-check span{font-size:.83rem;color:#c8b896;}
 
+.ct-group{margin-bottom:1.9rem;display:flex;flex-direction:column;gap:.85rem;max-width:640px;}
+.ct-group-title{font-family:'Fraunces',serif;font-size:.8rem;font-weight:600;color:#d08e30;text-transform:uppercase;letter-spacing:.1em;padding-bottom:.5rem;border-bottom:1px solid rgba(240,232,210,.08);}
+
 .adm-drop{border:2px dashed rgba(240,232,210,.12);border-radius:4px;padding:1.9rem 1rem;text-align:center;cursor:pointer;transition:all .25s;background:rgba(240,232,210,.02);}
 .adm-drop:hover,.adm-drop.over{border-color:#e8520f;background:rgba(232,82,15,.05);}
 .adm-drop.done{border-color:#25d366;border-style:solid;background:rgba(37,211,102,.04);}
@@ -270,6 +406,7 @@
     <button class="adm-tab active" data-tab="tracks">🎵 Canciones</button>
     <button class="adm-tab" data-tab="artists">👤 Artistas</button>
     <button class="adm-tab" data-tab="releases">💿 Lanzamientos</button>
+    <button class="adm-tab" data-tab="content">📝 Textos</button>
     <button class="adm-tab" data-tab="github">⚙ GitHub</button>
   </div>
   <div class="adm-scroll">
@@ -293,6 +430,17 @@
         <button class="ab ab-primary" id="adm-add-release">+ Nuevo lanzamiento</button>
       </div>
       <div id="adm-list-releases"></div>
+    </div>
+    <div class="adm-pane" id="adm-pane-content">
+      <div class="adm-sec">
+        <h2>Textos del <em>sitio</em></h2>
+        <button class="ab ab-primary" id="adm-content-save">Guardar textos ◆</button>
+      </div>
+      <p style="font-size:.78rem;color:#8a7660;line-height:1.6;margin-bottom:1.1rem">
+        Editá acá los títulos y textos principales del sitio. El estilo y la tipografía se mantienen siempre —
+        solo cambia el texto. Los cambios se aplican al instante y, si tenés GitHub conectado, se publican solos.
+      </p>
+      <div id="adm-content-form"></div>
     </div>
     <div class="adm-pane" id="adm-pane-github">
       <div class="adm-sec"><h2>Sync automático con <em>GitHub</em></h2></div>
@@ -351,6 +499,7 @@
     $('adm-dsave').addEventListener('click', saveForm);
     $('adm-fi-audio').addEventListener('change', e => handleAudioFile(e.target.files[0]));
     $('adm-fi-cover').addEventListener('change', e => handleCoverFile(e.target.files[0]));
+    $('adm-content-save').addEventListener('click', saveContentForm);
     document.querySelectorAll('.adm-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
     $('gh-save-btn').addEventListener('click', () => {
@@ -382,6 +531,7 @@
     if (tab === 'tracks')   renderTracks();
     if (tab === 'artists')  renderArtists();
     if (tab === 'releases') renderReleases();
+    if (tab === 'content')  renderContentForm();
     if (tab === 'github')   renderGhSettings();
   }
 
@@ -1046,11 +1196,40 @@ window.__RELEASES__ = ${JSON.stringify(cat.releases,null,2)};
     }
   }
 
+  function genContentJs() {
+    return `// TIKICIA RECORDS — Textos del sitio\n// Auto-generado: panel admin ⚙ · pestaña "Textos"\n// Para editar: abrí el panel admin en el sitio (no edites este archivo a mano)\n\n(function () { "use strict";\n\nwindow.__CONTENT__ = ${JSON.stringify(content, null, 2)};\n\n})();\n`;
+  }
+
+  async function pushContentToGitHub() {
+    const c = ghCfg();
+    if (!c.token || !c.owner || !c.repo) return;
+    toast('inf', 'Publicando textos en GitHub…');
+    try {
+      const api  = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/content.js`;
+      const hdrs = { 'Authorization': 'token ' + c.token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+      const getRes = await fetch(api, { headers: hdrs });
+      const sha    = getRes.ok ? (await getRes.json()).sha : null;
+      const encoded = btoa(unescape(encodeURIComponent(genContentJs())));
+      const body   = { message: 'Actualizar textos del sitio desde panel admin', content: encoded, branch: c.branch || 'main' };
+      if (sha) body.sha = sha;
+      const putRes = await fetch(api, { method: 'PUT', headers: hdrs, body: JSON.stringify(body) });
+      if (putRes.ok) {
+        toast('ok', 'content.js actualizado en GitHub ✓ · Todos los dispositivos verán los cambios en ~1 min');
+      } else {
+        const err = await putRes.json().catch(() => ({}));
+        toast('err', 'GitHub: ' + (err.message || 'Error al guardar — revisá la config'));
+      }
+    } catch (e) {
+      toast('err', 'Sin conexión a GitHub');
+      console.warn('[TIKICIA] GH push (content):', e);
+    }
+  }
+
   /* ──────────────────────────────────────────────────────────────
      INIT
   ────────────────────────────────────────────────────────────── */
   function init() {
-    loadCat(); css(); html();
+    loadCat(); loadContent(); css(); html();
     window.__adm = { openForm, deleteItem, playSong, exportDataJs, onDrop };
     setTimeout(()=>refreshSite(), 200);
   }
