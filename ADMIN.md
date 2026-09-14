@@ -54,6 +54,16 @@
 
 ---
 
+### 📝 Editar los textos del sitio
+
+1. Abrí el panel Admin → Tab **📝 Textos**
+2. Ahí están agrupados los títulos y textos principales del sitio (portada, servicios, planes, manifiesto, contacto, pie de página, etc.)
+3. Cambiá lo que quieras y tocá **Guardar textos ◆**
+4. El cambio se ve al instante en el sitio, y el estilo/tipografía se mantiene siempre igual — solo cambia el texto
+5. Si tenés GitHub Sync configurado (Tab **⚙ GitHub**), se publica solo, igual que con canciones y artistas
+
+---
+
 ### 💿 Agregar un lanzamiento (Álbum/EP)
 
 1. Abrí el panel Admin → Tab **💿 Lanzamientos**

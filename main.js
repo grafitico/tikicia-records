@@ -50,6 +50,18 @@
 </svg>`;
   }
 
+  // ─── CONTENT (textos editables desde el panel admin) ──────────────────
+  function applyContent() {
+    const content = window.__CONTENT__;
+    if (!content) return;
+    $$('[data-ck]').forEach(el => {
+      const val = content[el.dataset.ck];
+      if (val != null) el.innerHTML = val;
+    });
+  }
+  window.__applyContent = applyContent;
+  safe('content-apply', applyContent);
+
   // ─── SPLASH ──────────────────────────────────────────────────────────
   safe('splash', function () {
     const splash = $('#splash');
