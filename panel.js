@@ -408,6 +408,7 @@
     <button class="adm-tab" data-tab="releases">💿 Lanzamientos</button>
     <button class="adm-tab" data-tab="content">📝 Textos</button>
     <button class="adm-tab" data-tab="github">⚙ GitHub</button>
+    <button class="adm-tab" data-tab="mixer">🎚️ Estudio de mezcla</button>
   </div>
   <div class="adm-scroll">
     <div class="adm-pane active" id="adm-pane-tracks">
@@ -430,6 +431,13 @@
         <button class="ab ab-primary" id="adm-add-release">+ Nuevo lanzamiento</button>
       </div>
       <div id="adm-list-releases"></div>
+    </div>
+    <div class="adm-pane" id="adm-pane-mixer">
+      <div class="adm-sec">
+        <h2>Estudio de <em>mezcla</em></h2>
+        <a class="ab ab-ghost" href="estudio-mezcla.html" target="_blank" rel="noopener" style="text-decoration:none">↗ Pantalla completa</a>
+      </div>
+      <iframe id="adm-mixer-frame" title="Estudio de mezcla y masterización" data-src="estudio-mezcla.html" allow="autoplay" style="width:100%;height:78vh;border:1px solid rgba(240,232,210,.12);border-radius:8px;background:#0f1217"></iframe>
     </div>
     <div class="adm-pane" id="adm-pane-content">
       <div class="adm-sec">
@@ -533,6 +541,7 @@
     if (tab === 'releases') renderReleases();
     if (tab === 'content')  renderContentForm();
     if (tab === 'github')   renderGhSettings();
+    if (tab === 'mixer') { const f = $('adm-mixer-frame'); if (f && !f.getAttribute('src')) f.src = f.dataset.src; }
   }
 
   /* ──────────────────────────────────────────────────────────────
